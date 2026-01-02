@@ -4,241 +4,330 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STUDY TRACKER</title>
-
-    <link rel="stylesheet" href="kidszone.css">
+    <title>STUDY TRACKER PRO | NOTION STYLE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/date-fns/dist/date-fns.umd.min.js"></script>
     <script
         src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <link rel="stylesheet" href="kidszone.css" />
 </head>
 
 <body>
 
-    <!-- RADIAL MENU COMPONENT (Top-Right Corner) -->
-    <nav class="nav">
-      <!-- Hidden Checkbox to control menu state -->
-      <input id="menu" type="checkbox">
-      
-      <!-- Label acts as the visible 'Menu' button, using a hamburger icon -->
-      <label for="menu"><i class="fas fa-bars"></i></label>
-      
-      <!-- Menu List - Content updated to match the tracker's links -->
-      <ul class="menu">
-        <li>
-          <a href="#graph">
-            <span>STUDY GRAPH</span>
-            <i class="fas fa-chart-line" aria-hidden="true"></i>
-          </a>
-        </li>
-        <li>
-          <a href="#curious">
-            <span>GET CURIOUS</span>
-            <i class="fas fa-lightbulb" aria-hidden="true"></i>
-          </a>
-        </li>
-        <li>
-          <a href="#contact">
-            <span>CONTACT US</span>
-            <i class="fas fa-envelope" aria-hidden="true"></i>
-          </a>
-        </li>
-        <li>
-          <a href="#privacy">
-            <span>PRIVACY POLICY</span>
-            <i class="fas fa-shield-alt" aria-hidden="true"></i>
-          </a>
-        </li>
-        <li>
-          <a href="#search">
-            <span>ENJOY YOUR SEARCH</span>
-            <i class="fas fa-search" aria-hidden="true"></i> 
-          </a>
-        </li>
-      </ul>
-    </nav>
-    
-    <main>
-        <div class="chart-container">
-            <h1>STUDY GRAPH</h1>
-            <canvas id="timeChart"></canvas>
+    <div id="login-overlay">
 
-            <label for="startDate">Start Date:</label>
-            <input type="date" id="startDate" onchange="filterChartData()">
+        <div id="login-overlay">
+            <div class="login-card">
+                <h2 style="color: white;">Security Challenge</h2>
+                <div id="toast-container">Nice try! 😉</div>
 
-            <label for="endDate">End Date:</label>
-            <input type="date" id="endDate" onchange="filterChartData()">
+                <div id="code-display" style="display: flex; justify-content: center; gap: 8px; margin: 20px 0;">
 
-            <div id="totalsContainer" style="margin-top: 20px; color: #e0e324; font-weight: bold; z-index: 1;">
-                <p id="totalLessons">Lessons: 0 minutes</p>
-                <p id="totalFriends">Jehovah's Friends: 0 minutes</p>
-                <p id="totalWriting">Writing: 0 minutes</p>
-                <p id="totalOutdoor">Outdoor: 0 minutes</p>
+                    <div class="code-slot" id="slot-0">
+                    </div>
+
+                    <div class="code-slot" id="slot-1">?
+                    </div>
+
+                    <div class="code-slot" id="slot-2">?
+                    </div>
+
+                    <div class="code-slot" id="slot-3">?
+                    </div>
+
+                    <div class="code-slot" id="slot-4">?
+                    </div>
+
+                    <div class="code-slot" id="slot-5">?
+                    </div>
+                </div>
+
+                <div id="question-sequence">
+                    <p id="quest-text" style="color: #00fff7;">Loading...</p>
+                    <input type="text" id="quest-answer" placeholder="Your answer...">
+                    <button class="add-btn" style="width: 100%; margin-top: 10px;"
+                        onclick="app.passcode.checkAnswer()">Submit Answer</button>
+
+                    <p style="margin-top:15px; font-size:11px; color:rgba(0, 0, 0, 0.4); cursor:pointer; text-decoration:underline;"
+                        onclick="app.passcode.toggleBypass(true)">
+                        I already know the code
+                    </p>
+                </div>
+
+                <div id="bypass-sequence" style="display: none;">
+                    <p style="color: #ff9f43;">Enter 6-Digit Master Code</p>
+                    <input type="password" id="master-code-input" placeholder="••••••" maxlength="6">
+                    <button class="add-btn" style="width: 100%; margin-top: 10px; background: #ff9f43;"
+                        onclick="app.passcode.verifyMaster()">Unlock Now</button>
+                    <p style="margin-top:10px; font-size:11px; color:rgba(0, 0, 0, 0.4); cursor:pointer;"
+                        onclick="app.passcode.toggleBypass(false)">Go back to questions</p>
+                </div>
+
+                <div id="final-unlock" style="display: none;">
+                    <p style="color: #2ecc71; font-weight: bold;">ACCESS GRANTED</p>
+                    <button class="add-btn" style="width: 100%;" onclick="app.start()">Enter Workspace</button>
+                </div>
+
             </div>
-            
-            <script>
-                // --- 1. DATA AND CHART SETUP ---
-                const originalData = [
-                  
-                    { date: '2025-11-25', lessons: 23, friends: 40, writing: 0, outdoor: 0 },
-                    { date: '2025-11-27', lessons: 25, friends: 0, writing: 0, outdoor: 0 }, 
-                    { date: '2025-11-28', lessons: 27, friends: 0, writing: 0, outdoor: 0 },
-                    { date: '2025-12-01', lessons: 30, friends: 1, writing: 0, outdoor: 0 },
-                    { date: '2025-12-02', lessons: 32, friends: 0, writing: 0, outdoor: 0 },
-                    { date: '2025-12-04', lessons: 33, friends: 1, writing: 0, outdoor: 0 },
-                    { date: '2025-12-05', lessons: 34, friends: 0, writing: 0, outdoor: 0 },
-                    { date: '2025-12-07', lessons: 35, friends: 0, writing: 0, outdoor: 0 },
-                    { date: '2025-12-09', lessons: 36, friends: 0, writing: 0, outdoor: 0 },
-                    { date: '2025-12-10', lessons: 0, friends: 0, writing: 0, outdoor: 0 },
-                    { date: '2025-12-11', lessons: 0, friends: 0, writing: 0, outdoor: 0 },
-                    { date: '2025-12-12', lessons: 0, friends: 0, writing: 0, outdoor: 0 },
-                    { date: '2025-12-13', lessons: 0, friends: 0, writing: 0, outdoor: 0 },
-                    { date: '2025-12-14', lessons: 0, friends: 0, writing: 0, outdoor: 0 },
-                    { date: '2025-12-15', lessons: 0, friends: 0, writing: 0, outdoor: 0 },
-                    { date: '2025-12-16', lessons: 0, friends: 0, writing: 0, outdoor: 0 },
-                    { date: '2025-12-17', lessons: 0, friends: 0, writing: 0, outdoor: 0 },
-                    { date: '2025-12-18', lessons: 0, friends: 0, writing: 0, outdoor: 0 },
-                    { date: '2025-12-19', lessons: 0, friends: 0, writing: 0, outdoor: 0 },
-                    { date: '2025-12-20', lessons: 0, friends: 0, writing: 0, outdoor: 0 },
-                    { date: '2025-12-21', lessons: 0, friends: 0, writing: 0, outdoor: 0 },
-                    { date: '2025-12-22', lessons: 0, friends: 0, writing: 0, outdoor: 0 },
-                    { date: '2025-12-23', lessons: 0, friends: 0, writing: 0, outdoor: 0 },
-                    { date: '2025-12-24', lessons: 0, friends: 0, writing: 0, outdoor: 0 },
-                    { date: '2025-12-25', lessons: 0, friends: 0, writing: 0, outdoor: 0 },
-                    { date: '2025-12-26', lessons: 0, friends: 0, writing: 0, outdoor: 0 },
-                    { date: '2025-12-27', lessons: 0, friends: 0, writing: 0, outdoor: 0 },
-                    { date: '2025-12-28', lessons: 0, friends: 0, writing: 0, outdoor: 0 },
-                    { date: '2025-12-29', lessons: 0, friends: 0, writing: 0, outdoor: 0 },
-                    { date: '2025-12-30', lessons: 0, friends: 0, writing: 0, outdoor: 0 },
-                    { date: '2025-11-31', lessons: 0, friends: 0, writing: 0, outdoor: 0 }, 
-                ];
-                let myTimeChart;
-
-                // --- 2. TIME CONVERSION UTILITY ---
-                function minutesToHours(minutes) {
-                    const h = Math.floor(minutes / 60);
-                    const m = minutes % 60;
-                    if (h > 0) {
-                        return `${minutes} minutes (${h} hr ${m} min)`;
-                    } else {
-                        return `${minutes} minutes`;
-                    }
-                }
-
-                // --- 3. TOTALS UPDATE FUNCTION ---
-                function updateTotals(filteredData) {
-                    let totalLessons = 0;
-                    let totalFriends = 0;
-                    let totalWriting = 0;
-                    let totalOutdoor = 0;
-
-                    filteredData.forEach(item => {
-                        totalLessons += item.lessons;
-                        totalFriends += item.friends;
-                        totalWriting += item.writing;
-                        totalOutdoor += item.outdoor;
-                    });
-
-                    // Totals display requires a container/elements in the HTML, which I've added above.
-                    const totalsContainer = document.getElementById('totalsContainer');
-                    if (totalsContainer) {
-                        document.getElementById('totalLessons').textContent = `Lessons: ${minutesToHours(totalLessons)}`;
-                        document.getElementById('totalFriends').textContent = `Jehovah's Friends: ${minutesToHours(totalFriends)}`;
-                        document.getElementById('totalWriting').textContent = `Writing: ${minutesToHours(totalWriting)}`;
-                        document.getElementById('totalOutdoor').textContent = `Outdoor: ${minutesToHours(totalOutdoor)}`;
-                    }
-                }
-
-                // --- 4. CHART INITIALIZATION ---
-                function initChart() {
-                    const ctx = document.getElementById('timeChart').getContext('2d');
-                    myTimeChart = new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: originalData.map(item => item.date),
-                            datasets: [
-                                { label: "lessons", data: originalData.map(item => ({ x: item.date, y: item.lessons })), borderColor: "red", borderWidth: 2, fill: false, tension: 0.1 },
-                                { label: "JEHOVAH'S FRIENDS", data: originalData.map(item => ({ x: item.date, y: item.friends })), borderColor: "blue", borderWidth: 2, fill: false, tension: 0.1 },
-                                { label: "WRITING", data: originalData.map(item => ({ x: item.date, y: item.writing })), borderColor: "green", borderWidth: 2, fill: false, tension: 0.1 },
-                                { label: "OUTDOOR", data: originalData.map(item => ({ x: item.date, y: item.outdoor })), borderColor: "purple", borderWidth: 2, fill: false, tension: 0.1 }
-                            ]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            scales: {
-                                y: { min: 0, max: 60, ticks: { stepSize: 10 }, title: { display: true, text: 'Time (minutes)' } },
-                                x: { type: 'time', time: { unit: 'day', tooltipFormat: 'MMM dd, yyyy', displayFormats: { day: 'MMM d' } }, title: { display: true, text: 'Date' } }
-                            }
-                        }
-                    });
-
-                    updateTotals(originalData);
-                }
-
-                window.onload = initChart;
-
-                function filterChartData() {
-                    const startDateInput = document.getElementById('startDate').value;
-                    const endDateInput = document.getElementById('endDate').value;
-                    const startDate = startDateInput ? new Date(startDateInput) : null;
-                    const endDate = endDateInput ? new Date(endDateInput) : null;
-
-                    const filteredData = originalData.filter(item => {
-                        const itemDate = new Date(item.date);
-                        itemDate.setHours(0, 0, 0, 0);
-
-                        const isAfterStart = !startDate || itemDate >= startDate;
-                        const dayAfterEnd = endDate ? new Date(endDate.getTime() + 24 * 60 * 60 * 1000) : null;
-                        const isBeforeEnd = !dayAfterEnd || itemDate < dayAfterEnd;
-
-                        return isAfterStart && isBeforeEnd;
-                    });
-
-                    myTimeChart.data.datasets[0].data = filteredData.map(item => ({ x: item.date, y: item.lessons }));
-                    myTimeChart.data.datasets[1].data = filteredData.map(item => ({ x: item.date, y: item.friends }));
-                    myTimeChart.data.datasets[2].data = filteredData.map(item => ({ x: item.date, y: item.writing }));
-                    myTimeChart.data.datasets[3].data = filteredData.map(item => ({ x: item.date, y: item.outdoor }));
-
-                    if (filteredData.length > 0) {
-                        const firstDate = new Date(filteredData[0].date);
-                        const lastDate = new Date(filteredData[filteredData.length - 1].date);
-                        myTimeChart.options.scales.x.min = firstDate.toISOString();
-                        myTimeChart.options.scales.x.max = lastDate.toISOString();
-                    } else {
-                        myTimeChart.options.scales.x.min = undefined;
-                        myTimeChart.options.scales.x.max = undefined;
-                    }
-
-                    myTimeChart.update();
-                    updateTotals(filteredData);
-                }
-            </script>
         </div>
+    </div>
+
+    <div class="slideshow-container">
+        <img id="slideshow" src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1200">
+    </div>
+
+    <nav class="nav-radial" id="main-nav" style="display: none;">
+        <input type="checkbox" id="menu-toggle">
+        <label for="menu-toggle"><i class="fas fa-bars"></i></label>
+        <ul class="menu-list">
+            <li><a onclick="app.showPage('graph-page')"><i class="fas fa-chart-line"></i><span>Analytics</span></a></li>
+            <li><a onclick="app.showPage('tracker-page')"><i class="fas fa-table"></i><span>Log Progress</span></a></li>
+            <li><a onclick="app.showPage('diary-page')"><i class="fas fa-book"></i><span>Diary</span></a></li>
+        </ul>
+    </nav>
+    <main class="tracker-container" id="app-content" style="display: none;">
+
+        <section id="graph-page" class="app-page" style="display: block;">
+            <div class="card chart-card">
+                <div class="analytics-header">
+                    <h1 class="notion-h1">Study Performance</h1>
+                    <div id="displayDate" class="notion-tag">Activity Overview</div>
+                </div>
+
+                <div class="chart-container" style="height: 350px; position: relative; margin-bottom: 20px;">
+                    <canvas id="timeChart"></canvas>
+
+                </div>
+                <div class="date-controls-row">
+                    <div class="filter-group">
+                        <label><i class="far fa-calendar-alt"></i> Start Date</label>
+                        <input type="date" id="filterStart" onchange="app.updateChart()">
+                    </div>
+
+                    <div class="filter-group">
+                        <label><i class="far fa-calendar-alt"></i> End Date</label>
+                        <input type="date" id="filterEnd" onchange="app.updateChart()">
+                    </div>
+
+                    <div class="filter-group selector-group">
+                        <label><i class="fas fa-chart-pie"></i> Chart Type</label>
+                        <select onchange="app.changeChartType(this.value)" class="chart-selector">
+                            <optgroup label="Select Chart Type">
+                                <option value="bar">Bar Chart</option>
+                                <option value="pie">Pie Chart</option>
+                                <option value="line">Line Chart</option>
+                                <option value="radar">Radar Chart</option>
+        
+                            </optgroup>
+                        </select>
+                    </div>
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+
+            </div>
+        </section>
+        <section id="tracker-page" class="app-page" style="display: none;">
+
+            <div class="summary-grid">
+                <div class="mini-card"><small>Lessons</small>
+                    <h2 id="sum-lessons">0m</h2>
+                </div>
+                <div class="mini-card"><small>Social</small>
+                    <h2 id="sum-friends">0m</h2>
+                </div>
+                <div class="mini-card"><small>Writing</small>
+                    <h2 id="sum-writing">0m</h2>
+                </div>
+                <div class="mini-card"><small>Outdoor</small>
+                    <h2 id="sum-outdoor">0m</h2>
+                </div>
+            </div>
+            <div class="card quick-add-card">
+                <div class="quick-add-form" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end;">
+                    <div>
+                        <label style="display:block; font-size: 12px;">Date</label>
+                        <input type="date" id="newDate"
+                            style="padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
+                    </div>
+                    <div>
+                        <label style="display:block; font-size: 12px;">Lessons</label>
+                        <input type="number" id="newLessons" placeholder="min"
+                            style="width: 70px; padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
+                    </div>
+                    <div>
+                        <label style="display:block; font-size: 12px;">Social</label>
+                        <input type="number" id="newFriends" placeholder="min"
+                            style="width: 70px; padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
+                    </div>
+                    <div>
+                        <label style="display:block; font-size: 12px;">Writing</label>
+                        <input type="number" id="newWriting" placeholder="min"
+                            style="width: 70px; padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
+                    </div>
+                    <div>
+                        <label style="display:block; font-size: 12px;">Outdoor</label>
+                        <input type="number" id="newOutdoor" placeholder="min"
+                            style="width: 70px; padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
+                    </div>
+                    <button onclick="app.addRow()" class="add-btn">Add Row</button>
+                </div>
+            </div>
+            <div class="card table-card">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><i class="far fa-calendar-alt"></i> Date</th>
+                                <th><i class="fas fa-graduation-cap"></i> Lessons</th>
+                                <th><i class="fas fa-users"></i> Social</th>
+                                <th><i class="fas fa-pen-nib"></i> Writing</th>
+                                <th><i class="fas fa-tree"></i> Outdoor</th>
+                                <th style="text-align:right;">Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="data-management-footer">
+                <div class="card import-card">
+                    <div class="import-header">
+                        <i class="fas fa-tools"></i> <span>Workspace Settings</span>
+                    </div>
+                    <div class="import-controls">
+                        <input type="file" id="csvFileInput" accept=".csv" style="display:none;"
+                            onchange="app.handleImport()">
+
+                        <button onclick="document.getElementById('csvFileInput').click()" class="btn-ghost">
+                            <i class="fas fa-file-upload"></i> IMPORT CSV
+                        </button>
+                        <button onclick="app.downloadTemplate()" class="btn-ghost">
+                            <i class="fas fa-download"></i>DOWNLOAD
+                        </button>
+                        <button onclick="app.resetWorkspace()" class="btn-danger-soft">
+                            <i class="fas fa-trash-alt"></i> Reset Workspace
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="diary-page" class="app-page" style="display:none;">
+            <div class="card" style="margin-bottom: 15px; padding: 10px;">
+                <input type="text" id="diarySearch" placeholder="🔍 Search old entries..."
+                    oninput="app.diary.searchEntries(this.value)"
+                    style="width:100%; padding:8px; border:1px solid #ddd; border-radius:6px;">
+                <div id="searchResults" style="max-height: 150px; overflow-y: auto;"></div>
+            </div>
+            <div class="diary-layout">
+                <div class="calendar-card card">
+                    <div class="calendar-header">
+                        <button onclick="app.diary.prevMonth()">❮</button>
+                        <h2 id="monthDisplay">Month Year</h2>
+                        <button onclick="app.diary.nextMonth()">❯</button>
+                    </div>
+                    <div class="calendar-grid-header">
+                        <div>Sun</div>
+                        <div>Mon</div>
+                        <div>Tue</div>
+                        <div>Wed</div>
+                        <div>Thu</div>
+                        <div>Fri</div>
+                        <div>Sat</div>
+                    </div>
+                    <div id="calendarGrid" class="calendar-grid"></div>
+                </div>
+
+                <div id="diaryEditor" class="diary-editor card" style="display:none;">
+                    <h3 id="selectedDateDisplay">Select a date</h3>
+                    <div class="mood-section" style="margin-bottom: 15px;">
+                        <label style="font-weight: 600;">How's the vibe today?</label>
+                        <select id="moodSelect" style="width: 100%; padding: 8px; margin-top: 5px; border-radius: 6px;">
+                            <option value="neutral">😐 Neutral</option>
+                            <option value="happy">😊 Happy / Productive</option>
+                            <option value="tired">😴 Tired / Lazy</option>
+                            <option value="focused">🧠 Super Focused</option>
+                        </select>
+                    </div>
+
+                    <div class="diary-tasks-section" style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600;">
+                            <i class="fas fa-check-double"></i> Today's Tasks
+                        </label>
+                        <div class="task-input-group" style="display: flex; gap: 8px;">
+                            <input type="text" id="newTaskInput" placeholder="Enter a task..."
+                                style="flex-grow: 1; padding: 8px; border-radius: 6px; border: 1px solid #ccc;">
+                            <button onclick="app.diary.addTask()" class="add-btn"
+                                style="padding: 8px 15px; background: #0f993d; border: none; border-radius: 6px; cursor: pointer; color: #000;">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        <ul id="diaryTaskList" style="list-style: none; padding: 0; margin-top: 10px;"></ul>
+                    </div>
+
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">
+                        <i class="fas fa-book-open"></i> Journal Entry
+                    </label>
+                    <textarea id="diaryText" placeholder="Write your thoughts here..." required
+                        style="width: 100%; height: 100px; padding: 10px; border-radius: 6px; border: 1px solid #ccc; display: block;"></textarea>
+                    <span id="diaryError" style="color: #ff4d4f; font-size: 12px; display: none;">Your diary entry
+                        cannot be empty!</span>
+
+                    <button onclick="app.diary.saveEntry()" class="add-btn" style="width: 100%; margin-top: 15px;">
+                        Save Daily Log
+                    </button>
+                </div>
+            </div>
+            </div>
+        </section>
+
     </main>
 
-    <footer>
-        
-     <img src="./images/leon.png" alt="leon" class="footer-logo"> 
-        <h5>STUDY TRACKER for</h5>
-        <p>Keep track of your learning progress every day.</p>
-        <p>garrickkogola@gmail.com</p>
-        <div class="footer-links">
-            <a href="#">Terms of Use</a>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Privacy Settings</a>
+    <script src="kidszone.js"></script>
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <p>&copy; 2025 <strong>Dickens Garrick</strong></p>
+                <img src="https://lh3.googleusercontent.com/a-/ALV-UjXg4Xdb16H_R1MWR48SIKvFslB4zjvrQvz4-M5mPQ7nTtzivMmH5TKWypCKjfjNOAgvlP4grbJQ7PIXtUurFb8DCUgmk0KihZj3KoAwjZDIiAsf90Ey2b80AqYCGupG4o2xk9UCMT4DzVzpwvIsHB4zk9m9Qr-MNasOqSzmlqN3Gd_l7ixSXc2PDKFSqq-EC3oycstkH7Z-uUR8EdkvMtp92e48NGiP57syo_KIu840FTC9AJtelPqwWEwJVMUTCIkYKy7N1Z9bsJcIWJ-gy9zE80vgQu4fl7iN-xzLzKUYuX2ice0tOa6VUh2e4dg1-zRrBAg1gp8HGIBNg6nhgsUdGNMn52O-83HhdgmLjHH_Gt-sIMaqUU8wVtoh3rob1SPUT-SX_Pr-eLq3I9NgwCvDpzw3IJbCUaNxglhMNzcF7yhH3qv4z0H0G2z6bI1H8A-_wX5btsWT4MpDEmR8AoZtuybdbsVzV3GcAgGdqoYXCWZt44ggXq8nhU7X78tI2XnjcBPlPeRVmSg4pMcMback2W9p1oeUUL5OMVXXOucp1P75pCrkUzC0Qs0PcvIjk0iFQ5eR4r3kBfXHgMCPyWIz7rzM6s4brKWymscJJxYoypFyrSvbpEcg4ziWWtGtXrkj3PG6ZUOf9847yVZMfWxomaCJkFRRx8MTmkhJz1yUV12bXt4Xlmlms7fye6B_Ew2k5DR2y8RvbxK3Jov4cnHEMFXZTAei-HCD_8lLLsB_QjoffcWqU3xkJHxgagJMuNDKRJeMb8E7gffHKD_gXXlliKt75ugLBQrvDRMJMQE2mle9Me7tWY79vjUE982hFqwMw8FqPH5gLU8yaBhGvyL-PTrhrSP68lynuAh7MuYDuACxjmIeEDzGCizyuasqyvg7wrdW3qSW-tJ_ohdf3RVTPwd3v4cos2ufCero17etv6anF0RIcFuv1HXtPD8LfhOa8nNp_WNdjp2RaSYdguQPe2JdcOlG6pSzL1kattVZ2Gu4NK3ks4lpHz9xCzlFR9-RHmkQ0oXcfB_C3GOvrqtF7kddNNCZ_pOe297FARc0YknFgIquE6SW=s317-c-no"
+                    alt="MY IMAGE" class="profile-img">
+                <span class="footer-tagline">Study smarter, not harder.</span>
+            </div>
+
+            <ul class="footer-links">
+                <li><a href="https://online.visual-paradigm.com/drive/#proj=0&bookshelf">Terms of Use</a></li>
+                <li><a href="https://cdn.websitepolicies.com/wp-content/uploads/2022/04/privacy-policy-template.pdf">Privacy Policy</a></li>
+                <li><a href="#">Privacy Settings</a></li>
+            </ul>
+
+            <div class="footer-socials">
+
+                <a href="#" aria-label="Instagram">
+                    <img src="https://cdn-icons-png.flaticon.com/128/15713/15713420.png" alt="Instagram Logo" width="24"
+                        height="24">
+                </a>
+
+                <a href="https://github.com/GRK-WEK" aria-label="GitHub">
+                    <img src="https://cdn-icons-png.flaticon.com/128/11376/11376446.png" alt="GitHub Logo" width="24"
+                        height="24">
+                </a>
+                <a href="#" aria-label="Instagram">
+                    <img src="https://cdn-icons-png.flaticon.com/128/3536/3536761.png" alt="REDDIT Logo" width="24"
+                        height="24">
+                </a>
+                <a href="https://www.quora.com/profile/Garrick-Kogola" aria-label="LinkedIn">
+                    <img src="https://cdn-icons-png.flaticon.com/128/174/174865.png" alt="Quora Logo" width="24"
+                        height="24">
+                </a>
+            </div>
         </div>
     </footer>
-
-    <!-- All previous GSAP/jQuery menu toggle logic has been removed as the new menu is CSS-driven -->
-
 </body>
 
 </html>
