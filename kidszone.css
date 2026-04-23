@@ -21,10 +21,13 @@ body {
     min-height: 100vh;
 }
 
-/* --- LOGIN & NAV --- */
+
 #login-overlay {
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background: linear-gradient(135deg, #1a1a1a, #5146e1);
     display: flex;
     justify-content: center;
@@ -33,14 +36,16 @@ body {
 }
 
 .login-card {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    padding: 40px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    padding: 30px;
     border-radius: 20px;
-    text-align: center;
-    width: 90%;
+    width: 100%;
     max-width: 400px;
+    text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .login-card button {
@@ -55,31 +60,53 @@ body {
 }
 
 #login-overlay {
-    background-image: url('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/17/7f/a5/big-beach.jpg?w=700&h=400&s=1');
     position: fixed;
+    inset: 0;
+    background-image: url('https://dallasparrots.com/wp-content/uplhttps://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSk3MkcFPZPe62XoIGR1T9bm6FTl2VjL9PgLCSnt2cHDDZN13Sri5feXzucbVMRTpooL83a0_053giI9cYkevSm5tjPilrs52ASFs50jRqj&s=10oads/2023/07/WEBSITE-IMAGES-24.webp');
     background-size: cover;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    background-position: center;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 9999;
+    padding: 20px;
 }
 
+.code-slot {
+    width: 60px;
+    height: 60px;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ccc;
+    background-color: #f8f9fa;
+    transition: all 0.4s ease;
+    overflow: hidden;
+}
+
+.code-slot.unlocked {
+    border-color: #6c5ce7;
+    color: transparent;
+    box-shadow: 0 0 15px rgba(108, 92, 231, 0.4);
+    transform: scale(1.1);
+}
 
 .login-card {
-    background: none;
+    background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    -webkit-backdrop-filter: blur(15px);
     padding: 30px;
     border-radius: 20px;
-    width: 400px;
+    width: 90%;
+    max-width: 400px;
     text-align: center;
-
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
-
 
 .code-slot img {
     display: none;
@@ -193,7 +220,7 @@ body {
     height: 65px;
     background: var(--violet);
     border: 2px solid rgba(255, 255, 255, 0.4);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -204,7 +231,8 @@ body {
     right: 5px;
     transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     opacity: 0;
-    pointer-events: none; /* Can't click when hidden */
+    pointer-events: none;
+    /* Can't click when hidden */
 }
 
 /* Glassmorphism for the menu links */
@@ -219,35 +247,37 @@ body {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
-#menu-toggle:checked ~ .menu-list li {
+#menu-toggle:checked~.menu-list li {
     opacity: 1;
     pointer-events: auto;
 }
 
 
-#menu-toggle:checked ~ .menu-list li:nth-child(1) {
+#menu-toggle:checked~.menu-list li:nth-child(1) {
     transform: translate(-130px, 0px);
 }
 
-#menu-toggle:checked ~ .menu-list li:nth-child(2) {
+#menu-toggle:checked~.menu-list li:nth-child(2) {
     transform: translate(-70px, 70px);
 }
 
 
-#menu-toggle:checked ~ .menu-list li:nth-child(3) {
+#menu-toggle:checked~.menu-list li:nth-child(3) {
     transform: translate(0px, 100px);
 }
 
-#menu-toggle:checked + label #toggle-icon {
+#menu-toggle:checked+label #toggle-icon {
     transform: rotate(47deg);
 }
 
 #toggle-icon {
     transition: transform 0.4s ease;
 }
+
 #diaryText:focus {
     outline: none;
-    border-color: #b37feb; /* Purple to match your theme */
+    border-color: #b37feb;
+    /* Purple to match your theme */
     box-shadow: 0 0 5px rgba(179, 127, 235, 0.3);
     transition: all 0.3s ease;
 }
@@ -267,15 +297,16 @@ body {
     border-radius: 20px;
     font-size: 12px;
     font-weight: bold;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     transform: scale(0);
     transition: transform 0.3s ease;
 }
 
-#menu-toggle:checked ~ .menu-list li a span {
+#menu-toggle:checked~.menu-list li a span {
     transform: scale(1);
 }
+
 .menu-list li {
     position: absolute;
     top: 37px;
@@ -415,28 +446,34 @@ body {
     cursor: pointer;
 }
 
-.filter-group input, 
+.filter-group input,
 .chart-selector {
-    border: 1px solid rgba(255, 255, 255, 0.3) !important; 
-    background: rgba(0, 0, 0, 0.2); 
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    background: rgba(0, 0, 0, 0.2);
     color: white;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 
-.filter-group input:focus, 
+.filter-group input:focus,
 .chart-selector:focus {
     border-color: var(--violet) !important;
     outline: none;
     box-shadow: 0 0 8px rgba(110, 87, 255, 0.5);
 }
 
+::selection{
+    background-color: rgba(49, 35, 140, 0.419);
+    color: white;
+}
+
 .card {
     border: 1px solid rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(12px); 
+    backdrop-filter: blur(12px);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
+
 @media (max-width: 768px) {
     .chart-selector {
         margin-left: 0;
@@ -1206,25 +1243,25 @@ td[contenteditable="true"]:hover {
 .profile-img {
     width: 65px;
     height: 65px;
-    border-radius: 50%; 
-    object-fit: cover;  
+    border-radius: 50%;
+    object-fit: cover;
     border: 3px solid #b37feb;
     box-shadow: 0 4px 15px rgba(179, 127, 235, 0.3);
-    transition: all 0.3s ease-in-out; 
+    transition: all 0.3s ease-in-out;
     cursor: pointer;
 }
 
 .profile-img:hover {
-    transform: scale(1.1) rotate(5deg); 
+    transform: scale(1.1) rotate(5deg);
     box-shadow: 0 6px 20px rgba(179, 127, 235, 0.5);
-    border-color: #ff5e5e; 
+    border-color: #ff5e5e;
 }
 
 .footer-tagline {
     font-size: 0.85rem;
     letter-spacing: 1px;
     text-transform: uppercase;
-    color: #8c8c8c;
+    color: #1eff00;
     font-weight: 500;
 }
 
@@ -1295,4 +1332,203 @@ td[contenteditable="true"]:hover {
     .footer-links {
         justify-content: center;
     }
+}
+
+.logout-btn {
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    color: #555;
+    border: 1.5px solid #ddd;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.logout-btn:hover {
+    background-color: #fff5f5;
+    color: #e53e3e;
+    border-color: #feb2b2;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.logout-btn:active {
+    transform: scale(0.98);
+}
+
+.profile-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #00fff7;
+    box-shadow: 0 0 10px rgba(0, 255, 247, 0.3);
+    transition: transform 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.profile-img:hover {
+    transform: scale(1.1);
+}
+
+.wrapper {
+    background: white;
+    width: 100%;
+    max-width: 400px;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+#error-message {
+    color: red;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.incorrect input {
+    border: 2px solid red;
+}
+
+
+.input-group {
+    width: 100%;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+#tableBody:empty::after {
+    content: "No data found. Click 'Add Entry' to start tracking!";
+    display: block;
+    padding: 20px;
+    text-align: center;
+    color: var(--notion-gray);
+    font-style: italic;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.input-group.incorrect input {
+    border: 2px solid #e74c3c !important;
+    background-color: #fdf2f2 !important;
+}
+
+#error-message {
+    color: #e74c3c;
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+    min-height: 1.2em;
+}
+
+.btn {
+    width: 100%;
+    padding: 12px;
+    background: #6c5ce7;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 8px;
+    border: none;
+    transition: background 0.3s;
+}
+
+#signup-step,
+.login-card {
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+#signup-step {
+    display: block;
+}
+
+#signup-step {
+    display: block;
+    transition: all 0.5s ease;
+}
+
+.login-card {
+    display: none;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+}
+
+.fade-out {
+    opacity: 0;
+    transform: translateY(-20px);
+    pointer-events: none;
+}
+
+.fade-in {
+    display: block !important;
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+/* Remove the '.css' from the front */
+.rainbow-text {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #00fff7 !important; 
+    display: block !important;
+    visibility: visible !important;
+    position: relative;
+    z-index: 9999 !important;
+    
+    /* Rainbow Effect */
+    background: linear-gradient(to right, #ff0000, #ff7f00, #ffff00, #00ff00, #00fff7, #8b00ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent; 
+}
+
+
+#main-greeting {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+
+#footer-user-name {
+    font-size: 3rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #ffffff;
+    margin: 10px 0;
+}
+
+#tableBody:empty::after {
+    content: "No data found. Click 'Add Entry' to start tracking!";
+}
+
+#main-greeting {
+    color: #00fff7 !important; 
+    display: block !important;
+    font-family: 'Inter', sans-serif;
+    margin: 20px 0;
 }

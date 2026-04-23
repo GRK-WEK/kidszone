@@ -4,77 +4,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin-allow-popups">
     <title>STUDY TRACKER PRO | NOTION STYLE</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="icon" href="data:,">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/date-fns/dist/date-fns.umd.min.js"></script>
-    <script
-        src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@4.1.0/cdn.min.js"></script>
 
     <link rel="stylesheet" href="kidszone.css" />
 </head>
 
 <body>
 
-    <div id="login-overlay">
 
-        <div id="login-overlay">
-            <div class="login-card">
-                <h2 style="color: white;">Security Challenge</h2>
-                <div id="toast-container">Nice try! 😉</div>
 
-                <div id="code-display" style="display: flex; justify-content: center; gap: 8px; margin: 20px 0;">
+    <div id="login-overlay" style="display: flex; justify-content: center; align-items: center;">
 
-                    <div class="code-slot" id="slot-0">
-                    </div>
-
-                    <div class="code-slot" id="slot-1">?
-                    </div>
-
-                    <div class="code-slot" id="slot-2">?
-                    </div>
-
-                    <div class="code-slot" id="slot-3">?
-                    </div>
-
-                    <div class="code-slot" id="slot-4">?
-                    </div>
-
-                    <div class="code-slot" id="slot-5">?
-                    </div>
+        <div id="signup-step" class="wrapper">
+            <h1>Sign Up</h1>
+            <p id="error-message"></p>
+            <form id="form">
+                <div class="input-group">
+                    <input type="text" id="firstname-input" placeholder="Firstname">
                 </div>
-
-                <div id="question-sequence">
-                    <p id="quest-text" style="color: #00fff7;">Loading...</p>
-                    <input type="text" id="quest-answer" placeholder="Your answer...">
-                    <button class="add-btn" style="width: 100%; margin-top: 10px;"
-                        onclick="app.passcode.checkAnswer()">Submit Answer</button>
-
-                    <p style="margin-top:15px; font-size:11px; color:rgba(0, 0, 0, 0.4); cursor:pointer; text-decoration:underline;"
-                        onclick="app.passcode.toggleBypass(true)">
-                        I already know the code
-                    </p>
+                <div class="input-group">
+                    <input type="email" id="email-input" placeholder="Email">
                 </div>
-
-                <div id="bypass-sequence" style="display: none;">
-                    <p style="color: #ff9f43;">Enter 6-Digit Master Code</p>
-                    <input type="password" id="master-code-input" placeholder="••••••" maxlength="6">
-                    <button class="add-btn" style="width: 100%; margin-top: 10px; background: #ff9f43;"
-                        onclick="app.passcode.verifyMaster()">Unlock Now</button>
-                    <p style="margin-top:10px; font-size:11px; color:rgba(0, 0, 0, 0.4); cursor:pointer;"
-                        onclick="app.passcode.toggleBypass(false)">Go back to questions</p>
+                <div class="input-group">
+                    <input type="password" id="password-input" placeholder="Password">
                 </div>
-
-                <div id="final-unlock" style="display: none;">
-                    <p style="color: #2ecc71; font-weight: bold;">ACCESS GRANTED</p>
-                    <button class="add-btn" style="width: 100%;" onclick="app.start()">Enter Workspace</button>
+                <div class="input-group">
+                    <input type="password" id="repeat-password-input" placeholder="Repeat Password">
                 </div>
+                <button type="submit" class="btn">Create Account & Start Quiz</button>
+            </form>
+            <p class="footer-text" style="margin-top: 20px; font-size: 0.9rem;">
+                Already have an account?
+                <a href="#" id="show-login-link" style="color: #6c5ce7; font-weight: bold;">Login here</a>
+            </p>
+        </div>
 
+        <div id="login-step" class="wrapper" style="display: none;">
+            <h2>Login</h2>
+            <form id="login-form">
+                <div class="input-group">
+                    <input type="email" id="login-email" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="login-password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn">Login to Quiz</button>
+            </form>
+            <p class="footer-text" style="margin-top: 20px; font-size: 0.9rem;">
+                New here?
+                <a href="#" id="show-signup-link" style="color: #6c5ce7; font-weight: bold;">Create account</a>
+            </p>
+        </div>
+    </div>
+
+    <div class="login-card">
+
+        <h2 style="color: white;">Security Challenge</h2>
+        <div id="toast-container">Nice try! 😉</div>
+
+        <div id="code-display" style="display: flex; justify-content: center; gap: 8px; margin: 20px 0;">
+
+            <div class="code-slot" id="slot-0">
+            </div>
+
+            <div class="code-slot" id="slot-1">?
+            </div>
+
+            <div class="code-slot" id="slot-2">?
+            </div>
+
+            <div class="code-slot" id="slot-3">?
+            </div>
+
+            <div class="code-slot" id="slot-4">?
+            </div>
+
+            <div class="code-slot" id="slot-5">?
             </div>
         </div>
+
+        <div id="question-sequence">
+            <p id="quest-text" style="color: #00fff7;">Loading...</p>
+            <input type="text" id="quest-answer" placeholder="Your answer...">
+            <button class="add-btn" style="width: 100%; margin-top: 10px;" onclick="app.passcode.checkAnswer()">Submit
+                Answer</button>
+
+            <p style="margin-top:15px; font-size:11px; color:rgba(0, 0, 0, 0.4); cursor:pointer; text-decoration:underline;"
+                onclick="app.passcode.toggleBypass(true)">
+                I already know the code
+            </p>
+        </div>
+
+        <div id="bypass-sequence" style="display: none;">
+            <p style="color: #ff9f43;">Enter 6-Digit Master Code</p>
+            <input type="password" id="master-code-input" placeholder="••••••" maxlength="6">
+            <button class="add-btn" style="width: 100%; margin-top: 10px; background: #ff9f43;"
+                onclick="app.passcode.verifyMaster()">Unlock Now</button>
+            <p style="margin-top:10px; font-size:11px; color:rgba(0, 0, 0, 0.4); cursor:pointer;"
+                onclick="app.passcode.toggleBypass(false)">Go back to questions</p>
+        </div>
+
+        <div id="final-unlock" style="display: none;">
+            <p style="color: #2ecc71; font-weight: bold;">ACCESS GRANTED</p>
+            <button class="add-btn" style="width: 100%;" onclick="app.start()">Enter Workspace</button>
+        </div>
+
+    </div>
     </div>
 
     <div class="slideshow-container">
@@ -90,6 +136,7 @@
             <li><a onclick="app.showPage('diary-page')"><i class="fas fa-book"></i><span>Diary</span></a></li>
         </ul>
     </nav>
+
     <main class="tracker-container" id="app-content" style="display: none;">
 
         <section id="graph-page" class="app-page" style="display: block;">
@@ -116,16 +163,28 @@
 
                     <div class="filter-group selector-group">
                         <label><i class="fas fa-chart-pie"></i> Chart Type</label>
-                        <select onchange="app.changeChartType(this.value)" class="chart-selector">
+                        <select id="chartTypeSelector" onchange="app.changeChartType(this.value)"
+                            class="chart-selector">
                             <optgroup label="Select Chart Type">
                                 <option value="bar">Bar Chart</option>
                                 <option value="pie">Pie Chart</option>
                                 <option value="line">Line Chart</option>
                                 <option value="radar">Radar Chart</option>
-        
+
                             </optgroup>
                         </select>
                     </div>
+
+                    <button id="logout-btn" onclick="app.handleSignOut()" class="logout-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            style="margin-right: 8px;">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        Logout
+                    </button>
                 </div>
 
                 <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
@@ -214,6 +273,7 @@
                         <button onclick="app.resetWorkspace()" class="btn-danger-soft">
                             <i class="fas fa-trash-alt"></i> Reset Workspace
                         </button>
+
                     </div>
                 </div>
             </div>
@@ -290,20 +350,24 @@
 
     </main>
 
-    <script src="kidszone.js"></script>
     <footer class="main-footer">
         <div class="footer-content">
+
+            <div class="greeting-box" style="text-align: center; padding: 20px;">
+                <h1 id="main-greeting" class="rainbow-text"></h1>
+            </div>
+
             <div class="footer-brand">
-                <p>&copy; 2025 <strong>Dickens Garrick</strong></p>
-                <img src="https://lh3.googleusercontent.com/a-/ALV-UjXg4Xdb16H_R1MWR48SIKvFslB4zjvrQvz4-M5mPQ7nTtzivMmH5TKWypCKjfjNOAgvlP4grbJQ7PIXtUurFb8DCUgmk0KihZj3KoAwjZDIiAsf90Ey2b80AqYCGupG4o2xk9UCMT4DzVzpwvIsHB4zk9m9Qr-MNasOqSzmlqN3Gd_l7ixSXc2PDKFSqq-EC3oycstkH7Z-uUR8EdkvMtp92e48NGiP57syo_KIu840FTC9AJtelPqwWEwJVMUTCIkYKy7N1Z9bsJcIWJ-gy9zE80vgQu4fl7iN-xzLzKUYuX2ice0tOa6VUh2e4dg1-zRrBAg1gp8HGIBNg6nhgsUdGNMn52O-83HhdgmLjHH_Gt-sIMaqUU8wVtoh3rob1SPUT-SX_Pr-eLq3I9NgwCvDpzw3IJbCUaNxglhMNzcF7yhH3qv4z0H0G2z6bI1H8A-_wX5btsWT4MpDEmR8AoZtuybdbsVzV3GcAgGdqoYXCWZt44ggXq8nhU7X78tI2XnjcBPlPeRVmSg4pMcMback2W9p1oeUUL5OMVXXOucp1P75pCrkUzC0Qs0PcvIjk0iFQ5eR4r3kBfXHgMCPyWIz7rzM6s4brKWymscJJxYoypFyrSvbpEcg4ziWWtGtXrkj3PG6ZUOf9847yVZMfWxomaCJkFRRx8MTmkhJz1yUV12bXt4Xlmlms7fye6B_Ew2k5DR2y8RvbxK3Jov4cnHEMFXZTAei-HCD_8lLLsB_QjoffcWqU3xkJHxgagJMuNDKRJeMb8E7gffHKD_gXXlliKt75ugLBQrvDRMJMQE2mle9Me7tWY79vjUE982hFqwMw8FqPH5gLU8yaBhGvyL-PTrhrSP68lynuAh7MuYDuACxjmIeEDzGCizyuasqyvg7wrdW3qSW-tJ_ohdf3RVTPwd3v4cos2ufCero17etv6anF0RIcFuv1HXtPD8LfhOa8nNp_WNdjp2RaSYdguQPe2JdcOlG6pSzL1kattVZ2Gu4NK3ks4lpHz9xCzlFR9-RHmkQ0oXcfB_C3GOvrqtF7kddNNCZ_pOe297FARc0YknFgIquE6SW=s317-c-no"
-                    alt="MY IMAGE" class="profile-img">
+                <img id="user-profile-pic"
+                    src="https://lh3.googleusercontent.com/a-/ALV-UjX3DikwgxV2TSUG_l1-O33coxmg39dWSqDWiwv2czjhJFLRfag2oWw-nDXTGJ8keIKjNs8ukWRSsKiQsHo983WkmfPiP6cz1cicMI2kTI0C8-2UUpilG-H3AhfaY_rBJYMF4VsEywzbdAZzOnbVKTDvF7A3Pn_8mutnrRLlOU60yBT2WhPjav4DkbKhf6pB7I5XpnJW3GQXg3YiZxV80wUiqDG-SK9ywhwDVJwGQucNkBzoZ3qEA8t6HIS_sCuE_8P4Btx-bE99aMzR-ZtODMv17QoHUY_fVt4n5nc25_s75IdkYY4InOIb00_87vRFnL97ipINEwbl0zgYALljxBajAYUvgOxr0bPIDNDLYJ7KR8x2wGtOm2qV7kQDRoddpFW1hSs1sVK9-ge26n5NWQLYSqs-j9NV6C5AXjaFMhyW6axvwp6ad6M8LDM-R4ayFwlvcLoJMY2sbu3xTKugPGUKQgVLi6uKu_s4m8tIx47rIov10tlZgRs432mJhTdbgLlMbqCRIYUeYpYCEnekRv0hYay_O6CdoJRs0RY_bKNixKAlSx-h7dCrxkZ2W3intsmGbpab9Fa_rpgxTGyJGyXo4JxWOzuOqYX_--_FDG1fKs4AOqENrbuAnWIMbG_BT9cfMY1dnQ_J-Hp5DrHjsRL0T2QSOF_xzsIAAglknGAiR-5DUPvcSjFdG1MHh6XJGJxpLrPaIz15Za3vuWGKLULSLQaagNNqwDqdFsWXLMdfF8Rf3YKpRwGW21l4muQAH_BJ6uEI7R7d6erHDc9U6OhvNZIQ1t9JOduU-i1pq98_H7r-IoJni4rJwMSCamweyigfvNaJ4c-iBGQaPZYnHQ3FT-QTlIsykQTOTiKURVat0awqIXjsQl3aEAvGLmgdr6cgBQXfhjv0qS0p7MiaQRfsYMLGmZD2C4OR6aqTretALCK4lhblaRjcoC4gdt8oY7Gv35vRy056rKkc1L276p9go_cqmU5vGn3gDdgQoyonl-EtggFPuZMcodnA-jOpb8aOcBAKi-svSpagWFKraS9zl_BcElcfApC6jyyil0cfjFVJFaVcmNJE=s317-c-no"
+                    alt="User Profile" class="profile-img" referrerpolicy="no-referrer">
                 <span class="footer-tagline">Study smarter, not harder.</span>
             </div>
 
             <ul class="footer-links">
-                <li><a href="https://online.visual-paradigm.com/drive/#proj=0&bookshelf">Terms of Use</a></li>
-                <li><a href="https://cdn.websitepolicies.com/wp-content/uploads/2022/04/privacy-policy-template.pdf">Privacy Policy</a></li>
-                <li><a href="#">Privacy Settings</a></li>
+                <li><a href="terms-of-use.html">📜 Terms of Use</a></li>
+                <li><a href="privacy-policy.html">🔒 Privacy Policy</a></li>
+                <li><a href="privacy-settings.html">⚙️ Privacy Settings</a></li>
             </ul>
 
             <div class="footer-socials">
@@ -327,7 +391,13 @@
                 </a>
             </div>
         </div>
+        <h3>© 2025 Garrick Kogola</h3>
     </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="env.js"></script>
+
+    <script src="kidszone.js"></script>
 </body>
 
 </html>

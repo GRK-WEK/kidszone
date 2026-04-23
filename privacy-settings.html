@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Settings | STUDY TRACKER PRO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            min-height: 100vh;
+            color: #f1f5f9;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(46, 204, 113, 0.3);
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        .header p {
+            color: #94a3b8;
+        }
+        .card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(46, 204, 113, 0.2);
+        }
+        .settings-group {
+            margin: 20px 0;
+        }
+        .toggle-switch {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .toggle-switch:last-child {
+            border-bottom: none;
+        }
+        .toggle-info {
+            flex: 1;
+        }
+        .toggle-label {
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin-bottom: 5px;
+            color: #e2e8f0;
+        }
+        .toggle-desc {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 52px;
+            height: 28px;
+            margin-left: 20px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #475569;
+            transition: 0.2s;
+            border-radius: 28px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.2s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #2ecc71;
+        }
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+        .save-btn {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(46, 204, 113, 0.3);
+        }
+        .save-btn:active {
+            transform: translateY(0);
+        }
+        .save-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .reset-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .reset-link a {
+            color: #ef4444;
+            text-decoration: none;
+            font-size: 0.85rem;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+            cursor: pointer;
+        }
+        .reset-link a:hover {
+            opacity: 1;
+        }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+            padding: 10px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            margin-top: 20px;
+            transition: all 0.2s;
+            border: 1px solid rgba(46, 204, 113, 0.3);
+        }
+        .back-btn:hover {
+            background: rgba(46, 204, 113, 0.3);
+            transform: translateX(-5px);
+        }
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #2ecc71;
+            color: #1e293b;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        .toast.error {
+            background: #ef4444;
+        }
+        .toast.show {
+            opacity: 1;
+        }
+        .info-box {
+            background: rgba(46, 204, 113, 0.1);
+            border-left: 3px solid #2ecc71;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .loading-spinner {
+            text-align: center;
+            padding: 40px;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(46, 204, 113, 0.3);
+            border-top: 3px solid #2ecc71;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .auth-warning {
+            background: rgba(239, 68, 68, 0.2);
+            border-left: 3px solid #ef4444;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            color: #64748b;
+            font-size: 0.8rem;
+        }
+        @media (max-width: 768px) {
+            .container { padding: 20px; }
+            .toggle-switch { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .switch { margin-left: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-sliders-h"></i> Privacy Settings</h1>
+            <p>Control how your data is used</p>
+        </div>
+
+        <div id="loadingState" class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Loading your settings...</p>
+        </div>
+
+        <div id="settingsContent" style="display: none;">
+            <div id="authWarning" class="auth-warning" style="display: none;">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>Not logged in!</strong> Please log in to your STUDY TRACKER PRO account to save privacy settings.
+            </div>
+
+            <div class="info-box">
+                <i class="fas fa-info-circle" style="color: #2ecc71;"></i>
+                <strong>Your privacy, your choice.</strong> These settings are saved to your account and will sync across all your devices.
+            </div>
+
+            <div class="card">
+                <h2 style="color: #2ecc71; margin-bottom: 15px; font-size: 1.3rem;">
+                    <i class="fas fa-chart-line"></i> Data Collection Preferences
+                </h2>
+                
+                <div class="settings-group">
+                    <div class="toggle-switch">
+                        <div class="toggle-info">
+                            <div class="toggle-label">📊 Analytics & Usage Data</div>
+                            <div class="toggle-desc">Allow anonymous collection of how you use features to help us improve the platform</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="analytics-toggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-switch">
+                        <div class="toggle-info">
+                            <div class="toggle-label">🎯 Personalized Recommendations</div>
+                            <div class="toggle-desc">Use your study patterns to suggest optimal study times and productivity tips</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="personalize-toggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-switch">
+                        <div class="toggle-info">
+                            <div class="toggle-label">📧 Weekly Email Digest</div>
+                            <div class="toggle-desc">Receive a summary of your study progress, achievements, and insights via email</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="email-toggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-switch">
+                        <div class="toggle-info">
+                            <div class="toggle-label">🍪 Non-Essential Cookies</div>
+                            <div class="toggle-desc">Allow cookies for analytics and personalization (essential cookies always work)</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="cookies-toggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 style="color: #2ecc71; margin-bottom: 15px; font-size: 1.3rem;">
+                    <i class="fas fa-bell"></i> Notification Preferences
+                </h2>
+                
+                <div class="settings-group">
+                    <div class="toggle-switch">
+                        <div class="toggle-info">
+                            <div class="toggle-label">🔔 Study Reminders</div>
+                            <div class="toggle-desc">Get reminders to log your study sessions</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="reminders-toggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-switch">
+                        <div class="toggle-info">
+                            <div class="toggle-label">🏆 Achievement Alerts</div>
+                            <div class="toggle-desc">Celebrate your study milestones and streaks</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="achievements-toggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 style="color: #2ecc71; margin-bottom: 15px; font-size: 1.3rem;">
+                    <i class="fas fa-database"></i> Data Management
+                </h2>
+                
+                <div class="settings-group">
+                    <div class="toggle-switch">
+                        <div class="toggle-info">
+                            <div class="toggle-label">🗑️ Auto-delete Old Data</div>
+                            <div class="toggle-desc">Automatically delete study logs older than 1 year</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="autodelete-toggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <button class="save-btn" onclick="saveSettings()">
+                <i class="fas fa-save"></i> Save Settings to Account
+            </button>
+
+            <div class="reset-link">
+                <a href="#" onclick="resetSettings()"><i class="fas fa-undo-alt"></i> Reset to Default</a>
+            </div>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Study Tracker</a>
+        </div>
+
+        <div class="footer">
+            <p>© 2025-2026 STUDY TRACKER PRO. All rights reserved.</p>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">✓ Settings saved to your account!</div>
+
+    <script>
+        // Supabase configuration (use your actual values from kidszone.js)
+        const SUPABASE_URL = 'https://grkwekproject.supabase.co'; 
+        const SUPABASE_ANON_KEY = 'your-anon-key'; 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1paWV3a3h6c2ZmcGFlZmdkenRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcxNjc4ODEsImV4cCI6MjA4Mjc0Mzg4MX0.fLN3Ncmqb_ynCAPQnNr0nKZ_S0olZ4kohu87M6-Luy8'
+        let supabase;
+        let currentUser = null;
+
+        // Initialize Supabase
+        function initSupabase() {
+            if (typeof supabaseJs !== 'undefined') {
+                supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            } else {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+        }
+
+        // Check if user is logged in
+        async function checkAuth() {
+            try {
+                const { data: { session }, error } = await supabase.auth.getSession();
+                if (error) throw error;
+                
+                if (session) {
+                    currentUser = session.user;
+                    return true;
+                }
+                return false;
+            } catch (error) {
+                console.error('Auth check error:', error);
+                return false;
+            }
+        }
+
+        // Load settings from database
+        async function loadSettingsFromDB() {
+            try {
+                const { data, error } = await supabase
+                    .from('privacy_settings')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .single();
+                
+                if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
+                    console.error('Error loading settings:', error);
+                    return null;
+                }
+                
+                return data;
+            } catch (error) {
+                console.error('Error:', error);
+                return null;
+            }
+        }
+
+        // Save settings to database
+        async function saveSettingsToDB(settings) {
+            try {
+                // Check if settings exist for this user
+                const { data: existing, error: checkError } = await supabase
+                    .from('privacy_settings')
+                    .select('id')
+                    .eq('user_id', currentUser.id)
+                    .single();
+                
+                if (existing) {
+                    // Update existing
+                    const { error } = await supabase
+                        .from('privacy_settings')
+                        .update({
+                            analytics_enabled: settings.analytics,
+                            personalization_enabled: settings.personalization,
+                            email_digest_enabled: settings.emailDigest,
+                            nonessential_cookies: settings.cookies,
+                            study_reminders: settings.reminders,
+                            achievement_alerts: settings.achievements,
+                            auto_delete_old: settings.autoDelete,
+                            updated_at: new Date()
+                        })
+                        .eq('user_id', currentUser.id);
+                    
+                    if (error) throw error;
+                } else {
+                    // Insert new
+                    const { error } = await supabase
+                        .from('privacy_settings')
+                        .insert({
+                            user_id: currentUser.id,
+                            user_email: currentUser.email,
+                            analytics_enabled: settings.analytics,
+                            personalization_enabled: settings.personalization,
+                            email_digest_enabled: settings.emailDigest,
+                            nonessential_cookies: settings.cookies,
+                            study_reminders: settings.reminders,
+                            achievement_alerts: settings.achievements,
+                            auto_delete_old: settings.autoDelete,
+                            created_at: new Date(),
+                            updated_at: new Date()
+                        });
+                    
+                    if (error) throw error;
+                }
+                
+                return true;
+            } catch (error) {
+                console.error('Save error:', error);
+                return false;
+            }
+        }
+
+        // Apply settings to UI
+        function applySettingsToUI(settings) {
+            document.getElementById('analytics-toggle').checked = settings?.analytics_enabled ?? true;
+            document.getElementById('personalize-toggle').checked = settings?.personalization_enabled ?? true;
+            document.getElementById('email-toggle').checked = settings?.email_digest_enabled ?? false;
+            document.getElementById('cookies-toggle').checked = settings?.nonessential_cookies ?? true;
+            document.getElementById('reminders-toggle').checked = settings?.study_reminders ?? true;
+            document.getElementById('achievements-toggle').checked = settings?.achievement_alerts ?? true;
+            document.getElementById('autodelete-toggle').checked = settings?.auto_delete_old ?? false;
+        }
+
+        // Save current UI settings to database
+        async function saveSettings() {
+            const saveBtn = document.querySelector('.save-btn');
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            
+            const settings = {
+                analytics: document.getElementById('analytics-toggle').checked,
+                personalization: document.getElementById('personalize-toggle').checked,
+                emailDigest: document.getElementById('email-toggle').checked,
+                cookies: document.getElementById('cookies-toggle').checked,
+                reminders: document.getElementById('reminders-toggle').checked,
+                achievements: document.getElementById('achievements-toggle').checked,
+                autoDelete: document.getElementById('autodelete-toggle').checked
+            };
+            
+            const success = await saveSettingsToDB(settings);
+            
+            if (success) {
+                showToast('✓ Settings saved to your account!', 'success');
+                // Also save to localStorage as cache
+                localStorage.setItem('privacy_settings_cached', JSON.stringify(settings));
+            } else {
+                showToast('✗ Failed to save settings. Please try again.', 'error');
+            }
+            
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Settings to Account';
+        }
+
+        // Reset to default settings
+        async function resetSettings() {
+            if (confirm('Reset all privacy settings to default?')) {
+                document.getElementById('analytics-toggle').checked = true;
+                document.getElementById('personalize-toggle').checked = true;
+                document.getElementById('email-toggle').checked = false;
+                document.getElementById('cookies-toggle').checked = true;
+                document.getElementById('reminders-toggle').checked = true;
+                document.getElementById('achievements-toggle').checked = true;
+                document.getElementById('autodelete-toggle').checked = false;
+                
+                await saveSettings();
+            }
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast';
+            if (type === 'error') toast.classList.add('error');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize page
+        async function init() {
+            initSupabase();
+            
+            const isLoggedIn = await checkAuth();
+            
+            if (!isLoggedIn) {
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('settingsContent').style.display = 'block';
+                document.getElementById('authWarning').style.display = 'block';
+                document.querySelector('.save-btn').disabled = true;
+                return;
+            }
+            
+            // Load settings from database
+            const dbSettings = await loadSettingsFromDB();
+            applySettingsToUI(dbSettings);
+            
+            // Also cache in localStorage for quick access in main app
+            const cachedSettings = {
+                analytics: dbSettings?.analytics_enabled ?? true,
+                personalization: dbSettings?.personalization_enabled ?? true,
+                emailDigest: dbSettings?.email_digest_enabled ?? false,
+                cookies: dbSettings?.nonessential_cookies ?? true,
+                reminders: dbSettings?.study_reminders ?? true,
+                achievements: dbSettings?.achievement_alerts ?? true,
+                autoDelete: dbSettings?.auto_delete_old ?? false
+            };
+            localStorage.setItem('privacy_settings_cached', JSON.stringify(cachedSettings));
+            
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('settingsContent').style.display = 'block';
+        }
+        
+        // Run initialization
+        init();
+    </script>
+</body>
+</html>
