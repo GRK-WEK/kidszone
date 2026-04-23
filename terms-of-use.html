@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terms of Use | STUDY TRACKER PRO</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23c6b031' rx='20'/%3E%3Ctext x='50' y='72' text-anchor='middle' fill='white' font-size='64' font-weight='bold'%3E📜%3C/text%3E%3C/svg%3E">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
@@ -11,23 +13,27 @@
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
             min-height: 100vh;
             color: #f1f5f9;
         }
+
         .container {
             max-width: 900px;
             margin: 0 auto;
             padding: 40px 20px;
         }
+
         .header {
             text-align: center;
             margin-bottom: 40px;
             padding-bottom: 20px;
             border-bottom: 2px solid rgba(198, 176, 49, 0.3);
         }
+
         .header h1 {
             font-size: 2.5rem;
             background: linear-gradient(135deg, #c6b031, #e8d44d);
@@ -36,9 +42,11 @@
             -webkit-text-fill-color: transparent;
             margin-bottom: 10px;
         }
+
         .header p {
             color: #94a3b8;
         }
+
         .card {
             background: rgba(30, 41, 59, 0.7);
             backdrop-filter: blur(10px);
@@ -48,10 +56,12 @@
             border: 1px solid rgba(198, 176, 49, 0.2);
             transition: transform 0.2s;
         }
+
         .card:hover {
             transform: translateY(-2px);
             border-color: rgba(198, 176, 49, 0.4);
         }
+
         h2 {
             color: #c6b031;
             margin-bottom: 20px;
@@ -60,27 +70,33 @@
             align-items: center;
             gap: 10px;
         }
+
         h2 i {
             font-size: 1.3rem;
         }
+
         h3 {
             color: #e2e8f0;
             margin: 20px 0 10px 0;
             font-size: 1.2rem;
         }
+
         p {
             line-height: 1.6;
             color: #cbd5e1;
             margin-bottom: 15px;
         }
+
         ul {
             margin: 15px 0 15px 30px;
             color: #cbd5e1;
             line-height: 1.6;
         }
+
         li {
             margin-bottom: 8px;
         }
+
         .last-updated {
             text-align: center;
             padding: 20px;
@@ -89,6 +105,7 @@
             border-top: 1px solid rgba(198, 176, 49, 0.2);
             margin-top: 30px;
         }
+
         .back-btn {
             display: inline-flex;
             align-items: center;
@@ -102,10 +119,12 @@
             transition: all 0.2s;
             border: 1px solid rgba(198, 176, 49, 0.3);
         }
+
         .back-btn:hover {
             background: rgba(198, 176, 49, 0.3);
             transform: translateX(-5px);
         }
+
         .footer {
             text-align: center;
             margin-top: 40px;
@@ -113,13 +132,50 @@
             color: #64748b;
             font-size: 0.8rem;
         }
+
         @media (max-width: 768px) {
-            .container { padding: 20px; }
-            .card { padding: 20px; }
-            h2 { font-size: 1.3rem; }
+            .container {
+                padding: 20px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 1.3rem;
+            }
+        }
+
+        .legal-toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1e293b;
+            backdrop-filter: blur(12px);
+            border-radius: 10px;
+            padding: 12px 20px;
+            min-width: 250px;
+            border-left: 3px solid #c6b031;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 10000;
+            font-size: 0.85rem;
+            color: #e2e8f0;
+        }
+
+        .legal-toast.show {
+            transform: translateX(0);
+        }
+
+        .legal-toast i {
+            margin-right: 10px;
+            color: #c6b031;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -129,7 +185,9 @@
 
         <div class="card">
             <h2><i class="fas fa-gavel"></i> Agreement to Terms</h2>
-            <p>Welcome to <strong>STUDY TRACKER PRO</strong> ("we," "our," "platform"). By accessing or using our application, you agree to be bound by these Terms of Use. If you disagree with any part of these terms, please do not use our service.</p>
+            <p>Welcome to <strong>STUDY TRACKER PRO</strong> ("we," "our," "platform"). By accessing or using our
+                application, you agree to be bound by these Terms of Use. If you disagree with any part of these terms,
+                please do not use our service.</p>
         </div>
 
         <div class="card">
@@ -141,7 +199,8 @@
                 <li>Notify us immediately of any security breach</li>
                 <li>Be responsible for all activities that occur under your account</li>
             </ul>
-            <p>You must be at least 13 years old to use this service. By creating an account, you represent that you meet this age requirement.</p>
+            <p>You must be at least 13 years old to use this service. By creating an account, you represent that you
+                meet this age requirement.</p>
         </div>
 
         <div class="card">
@@ -160,9 +219,14 @@
 
         <div class="card">
             <h2><i class="fas fa-database"></i> 3. Data Ownership & Content</h2>
-            <p><strong>Your Content:</strong> You retain full ownership of all study logs, diary entries, mood data, and other content you create within STUDY TRACKER PRO. We do not claim any ownership rights over your personal data.</p>
-            <p><strong>Our Rights:</strong> We own all intellectual property rights in the platform, including the code, design, features, and functionality. You are granted a limited, non-exclusive, revocable license to use the service.</p>
-            <p><strong>Data License:</strong> By using our service, you grant us a license to host, store, and display your content solely to provide you with the service features.</p>
+            <p><strong>Your Content:</strong> You retain full ownership of all study logs, diary entries, mood data, and
+                other content you create within STUDY TRACKER PRO. We do not claim any ownership rights over your
+                personal data.</p>
+            <p><strong>Our Rights:</strong> We own all intellectual property rights in the platform, including the code,
+                design, features, and functionality. You are granted a limited, non-exclusive, revocable license to use
+                the service.</p>
+            <p><strong>Data License:</strong> By using our service, you grant us a license to host, store, and display
+                your content solely to provide you with the service features.</p>
         </div>
 
         <div class="card">
@@ -174,7 +238,8 @@
                 <li>Suspend access for security reasons</li>
                 <li>Discontinue certain features with reasonable notice</li>
             </ul>
-            <p>We are not liable for any temporary interruptions or data loss due to technical issues beyond our reasonable control.</p>
+            <p>We are not liable for any temporary interruptions or data loss due to technical issues beyond our
+                reasonable control.</p>
         </div>
 
         <div class="card">
@@ -190,12 +255,16 @@
 
         <div class="card">
             <h2><i class="fas fa-handshake"></i> 6. Indemnification</h2>
-            <p>You agree to indemnify and hold harmless STUDY TRACKER PRO, its operators, and affiliates from any claims, damages, or expenses arising from your use of the service, violation of these terms, or infringement of any third-party rights.</p>
+            <p>You agree to indemnify and hold harmless STUDY TRACKER PRO, its operators, and affiliates from any
+                claims, damages, or expenses arising from your use of the service, violation of these terms, or
+                infringement of any third-party rights.</p>
         </div>
 
         <div class="card">
             <h2><i class="fas fa-ban"></i> 7. Termination</h2>
-            <p>We reserve the right to suspend or terminate your account if you violate these terms. You may delete your account at any time by using the "Reset Workspace" feature or contacting us. Upon termination, we will delete your personal data within 30 days.</p>
+            <p>We reserve the right to suspend or terminate your account if you violate these terms. You may delete your
+                account at any time by using the "Reset Workspace" feature or contacting us. Upon termination, we will
+                delete your personal data within 30 days.</p>
         </div>
 
         <div class="card">
@@ -224,12 +293,34 @@
         </div>
 
         <div style="text-align: center;">
-            <a href="kidszone.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Study Tracker</a>
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Study Tracker</a>
         </div>
 
         <div class="footer">
             <p>© 2025-2026 STUDY TRACKER PRO. All rights reserved.</p>
         </div>
     </div>
+    <script>
+        function showLegalToast(message, icon = 'fa-info-circle') {
+            const existingToasts = document.querySelectorAll('.legal-toast');
+            existingToasts.forEach(t => t.remove());
+
+            const toast = document.createElement('div');
+            toast.className = 'legal-toast';
+            toast.innerHTML = `<i class="fas ${icon}"></i> ${message}`;
+            document.body.appendChild(toast);
+
+            setTimeout(() => toast.classList.add('show'), 10);
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            showLegalToast('Welcome to STUDY TRACKER PRO - Please read our terms carefully', 'fa-gavel');
+        });</script>
 </body>
+
 </html>

@@ -7,13 +7,27 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
     <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin-allow-popups">
     <title>STUDY TRACKER PRO | NOTION STYLE</title>
+
+    <!-- Favicon - Simple and clean -->
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%232ecc71' rx='20'/%3E%3Ctext x='50' y='72' text-anchor='middle' fill='white' font-size='64' font-weight='bold'%3E📚%3C/text%3E%3C/svg%3E">
+
+    <!-- Fallback for older browsers -->
+    <link rel="icon" type="image/png" sizes="32x32"
+        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAB9SURBVFhH7dUxCoAwDEDRL03MndPXu3gFQVqkpbYoONgfVvWTlJIQ+GkCE5jABCYwgQlMYAITmMAEJjCBCUxgAhOYwAQmMIFfGaCqVtU0Dc/zgiRJeJ4XJEmCJElomiaSJEEURVhFEAQ4z7M913XtvK4r935FURycYRjQNA2SJAlJEsZQijzE/eHUVL/rAAAAAElFTkSuQmCC">
+
+    <!-- Apple Touch Icon for iOS -->
+    <link rel="apple-touch-icon"
+        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAB9SURBVHhe7dYxDoAgDEDREgebDJy8h4djJSRoO8CPsDjY+JqXtiRVtRERERERERERERH5A+u+j+u6juM4juM4juM4jvM8x3me4zzPsW0bTdNQFAVFURAEQRAEwXuLZVnYN23bMk3TNE3TNE3TNE3TNLcbERERERERERGRX03BBqPKE2y/qQAAAABJRU5ErkJggg==">
+
+    <!-- Styles and Scripts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="kidszone.css" />
+
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/date-fns/dist/date-fns.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/date-fns@4.1.0/cdn.min.js"></script>
-    <link rel="stylesheet" href="kidszone.css" />
 </head>
 
 <body>
@@ -76,7 +90,8 @@
         <div id="question-sequence">
             <p id="quest-text" style="color: #00fff7;">Loading...</p>
             <input type="text" id="quest-answer" placeholder="Your answer...">
-            <button class="add-btn" style="width: 100%; margin-top: 10px;" onclick="app.passcode.checkAnswer()">Submit Answer</button>
+            <button class="add-btn" style="width: 100%; margin-top: 10px;" onclick="app.passcode.checkAnswer()">Submit
+                Answer</button>
             <p style="margin-top:15px; font-size:11px; color:rgba(0, 0, 0, 0.4); cursor:pointer; text-decoration:underline;"
                 onclick="app.passcode.toggleBypass(true)">
                 I already know the code
@@ -135,7 +150,8 @@
                     </div>
                     <div class="filter-group selector-group">
                         <label><i class="fas fa-chart-pie"></i> Chart Type</label>
-                        <select id="chartTypeSelector" onchange="app.changeChartType(this.value)" class="chart-selector">
+                        <select id="chartTypeSelector" onchange="app.changeChartType(this.value)"
+                            class="chart-selector">
                             <optgroup label="Select Chart Type">
                                 <option value="bar">Bar Chart</option>
                                 <option value="pie">Pie Chart</option>
@@ -179,23 +195,28 @@
                 <div class="quick-add-form" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end;">
                     <div>
                         <label style="display:block; font-size: 12px;">Date</label>
-                        <input type="date" id="newDate" style="padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
+                        <input type="date" id="newDate"
+                            style="padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
                     </div>
                     <div>
                         <label style="display:block; font-size: 12px;">Lessons</label>
-                        <input type="number" id="newLessons" placeholder="min" style="width: 70px; padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
+                        <input type="number" id="newLessons" placeholder="min"
+                            style="width: 70px; padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
                     </div>
                     <div>
                         <label style="display:block; font-size: 12px;">Social</label>
-                        <input type="number" id="newFriends" placeholder="min" style="width: 70px; padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
+                        <input type="number" id="newFriends" placeholder="min"
+                            style="width: 70px; padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
                     </div>
                     <div>
                         <label style="display:block; font-size: 12px;">Writing</label>
-                        <input type="number" id="newWriting" placeholder="min" style="width: 70px; padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
+                        <input type="number" id="newWriting" placeholder="min"
+                            style="width: 70px; padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
                     </div>
                     <div>
                         <label style="display:block; font-size: 12px;">Outdoor</label>
-                        <input type="number" id="newOutdoor" placeholder="min" style="width: 70px; padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
+                        <input type="number" id="newOutdoor" placeholder="min"
+                            style="width: 70px; padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
                     </div>
                     <button onclick="app.addRow()" class="add-btn">Add Row</button>
                 </div>
@@ -225,16 +246,15 @@
                         <i class="fas fa-tools"></i> <span>Workspace Settings</span>
                     </div>
                     <div class="import-controls">
-                        <input type="file" id="csvFileInput" accept=".csv" style="display:none;" onchange="app.handleImport()">
+                        <input type="file" id="csvFileInput" accept=".csv" style="display:none;"
+                            onchange="app.handleImport()">
                         <button onclick="document.getElementById('csvFileInput').click()" class="btn-ghost">
                             <i class="fas fa-file-upload"></i> IMPORT CSV
                         </button>
-                        <button onclick="app.downloadTemplate()" class="btn-ghost">
+                        <button onclick="downloadCSV()" id="downloadBtn" class="btn-ghost">
                             <i class="fas fa-download"></i> DOWNLOAD
                         </button>
-                        <button onclick="app.resetWorkspace()" class="btn-danger-soft">
-                            <i class="fas fa-trash-alt"></i> Reset Workspace
-                        </button>
+
                     </div>
                 </div>
             </div>
@@ -242,7 +262,8 @@
 
         <section id="diary-page" class="app-page" style="display:none;">
             <div class="card" style="margin-bottom: 15px; padding: 10px;">
-                <input type="text" id="diarySearch" placeholder="🔍 Search old entries..." oninput="app.diary.searchEntries(this.value)"
+                <input type="text" id="diarySearch" placeholder="🔍 Search old entries..."
+                    oninput="app.diary.searchEntries(this.value)"
                     style="width:100%; padding:8px; border:1px solid #ddd; border-radius:6px;">
                 <div id="searchResults" style="max-height: 150px; overflow-y: auto;"></div>
             </div>
@@ -282,8 +303,10 @@
                             <i class="fas fa-check-double"></i> Today's Tasks
                         </label>
                         <div class="task-input-group" style="display: flex; gap: 8px;">
-                            <input type="text" id="newTaskInput" placeholder="Enter a task..." style="flex-grow: 1; padding: 8px; border-radius: 6px; border: 1px solid #ccc;">
-                            <button onclick="app.diary.addTask()" class="add-btn" style="padding: 8px 15px; background: #0f993d; border: none; border-radius: 6px; cursor: pointer; color: #000;">
+                            <input type="text" id="newTaskInput" placeholder="Enter a task..."
+                                style="flex-grow: 1; padding: 8px; border-radius: 6px; border: 1px solid #ccc;">
+                            <button onclick="app.diary.addTask()" class="add-btn"
+                                style="padding: 8px 15px; background: #0f993d; border: none; border-radius: 6px; cursor: pointer; color: #000;">
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
@@ -293,8 +316,10 @@
                     <label style="display: block; margin-bottom: 8px; font-weight: 600;">
                         <i class="fas fa-book-open"></i> Journal Entry
                     </label>
-                    <textarea id="diaryText" placeholder="Write your thoughts here..." required style="width: 100%; height: 100px; padding: 10px; border-radius: 6px; border: 1px solid #ccc; display: block;"></textarea>
-                    <span id="diaryError" style="color: #ff4d4f; font-size: 12px; display: none;">Your diary entry cannot be empty!</span>
+                    <textarea id="diaryText" placeholder="Write your thoughts here..." required
+                        style="width: 100%; height: 100px; padding: 10px; border-radius: 6px; border: 1px solid #ccc; display: block;"></textarea>
+                    <span id="diaryError" style="color: #ff4d4f; font-size: 12px; display: none;">Your diary entry
+                        cannot be empty!</span>
 
                     <button onclick="app.diary.saveEntry()" class="add-btn" style="width: 100%; margin-top: 15px;">
                         Save Daily Log
@@ -310,9 +335,23 @@
                 <h1 id="main-greeting" class="rainbow-text"></h1>
             </div>
 
-            <div class="footer-brand">
-                <img id="user-profile-pic" src="https://lh3.googleusercontent.com/a-/ALV-UjX3DikwgxV2TSUG_l1-O33coxmg39dWSqDWiwv2czjhJFLRfag2oWw-nDXTGJ8keIKjNs8ukWRSsKiQsHo983WkmfPiP6cz1cicMI2kTI0C8-2UUpilG-H3AhfaY_rBJYMF4VsEywzbdAZzOnbVKTDvF7A3Pn_8mutnrRLlOU60yBT2WhPjav4DkbKhf6pB7I5XpnJW3GQXg3YiZxV80wUiqDG-SK9ywhwDVJwGQucNkBzoZ3qEA8t6HIS_sCuE_8P4Btx-bE99aMzR-ZtODMv17QoHUY_fVt4n5nc25_s75IdkYY4InOIb00_87vRFnL97ipINEwbl0zgYALljxBajAYUvgOxr0bPIDNDLYJ7KR8x2wGtOm2qV7kQDRoddpFW1hSs1sVK9-ge26n5NWQLYSqs-j9NV6C5AXjaFMhyW6axvwp6ad6M8LDM-R4ayFwlvcLoJMY2sbu3xTKugPGUKQgVLi6uKu_s4m8tIx47rIov10tlZgRs432mJhTdbgLlMbqCRIYUeYpYCEnekRv0hYay_O6CdoJRs0RY_bKNixKAlSx-h7dCrxkZ2W3intsmGbpab9Fa_rpgxTGyJGyXo4JxWOzuOqYX_--_FDG1fKs4AOqENrbuAnWIMbG_BT9cfMY1dnQ_J-Hp5DrHjsRL0T2QSOF_xzsIAAglknGAiR-5DUPvcSjFdG1MHh6XJGJxpLrPaIz15Za3vuWGKLULSLQaagNNqwDqdFsWXLMdfF8Rf3YKpRwGW21l4muQAH_BJ6uEI7R7d6erHDc9U6OhvNZIQ1t9JOduU-i1pq98_H7r-IoJni4rJwMSCamweyigfvNaJ4c-iBGQaPZYnHQ3FT-QTlIsykQTOTiKURVat0awqIXjsQl3aEAvGLmgdr6cgBQXfhjv0qS0p7MiaQRfsYMLGmZD2C4OR6aqTretALCK4lhblaRjcoC4gdt8oY7Gv35vRy056rKkc1L276p9go_cqmU5vGn3gDdgQoyonl-EtggFPuZMcodnA-jOpb8aOcBAKi-svSpagWFKraS9zl_BcElcfApC6jyyil0cfjFVJFaVcmNJE=s317-c-no" alt="User Profile" class="profile-img" referrerpolicy="no-referrer">
-                <span class="footer-tagline">Study smarter, not harder.</span>
+            <!-- Profile Section with Clickable Avatar -->
+            <div class="footer-profile" id="footer-profile">
+                <div class="profile-avatar" onclick="openProfileModal()">
+                    <img id="user-profile-pic"
+                        src="https://ui-avatars.com/api/?background=2ecc71&color=fff&bold=true&size=80&length=2"
+                        alt="Profile" class="profile-img">
+                    <div class="profile-overlay">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                </div>
+                <div class="profile-info">
+                    <h3 id="profile-display-name">Guest User</h3>
+                    <span class="profile-role">Study Tracker</span>
+                </div>
+                <button onclick="openProfileSettings()" class="profile-settings-btn">
+                    <i class="fas fa-cog"></i>
+                </button>
             </div>
 
             <ul class="footer-links">
@@ -323,24 +362,120 @@
 
             <div class="footer-socials">
                 <a href="#" aria-label="Instagram">
-                    <img src="https://cdn-icons-png.flaticon.com/128/15713/15713420.png" alt="Instagram Logo" width="24" height="24">
+                    <img src="https://cdn-icons-png.flaticon.com/128/15713/15713420.png" alt="Instagram Logo" width="24"
+                        height="24">
                 </a>
                 <a href="https://github.com/GRK-WEK" aria-label="GitHub">
-                    <img src="https://cdn-icons-png.flaticon.com/128/11376/11376446.png" alt="GitHub Logo" width="24" height="24">
+                    <img src="https://cdn-icons-png.flaticon.com/128/11376/11376446.png" alt="GitHub Logo" width="24"
+                        height="24">
                 </a>
-                <a href="#" aria-label="Reddit">
-                    <img src="https://cdn-icons-png.flaticon.com/128/3536/3536761.png" alt="REDDIT Logo" width="24" height="24">
+                <a href="https://www.reddit.com/r/outdoorhotspot" aria-label="Reddit">
+                    <img src="https://cdn-icons-png.flaticon.com/128/3536/3536761.png" alt="REDDIT Logo" width="24"
+                        height="24">
                 </a>
                 <a href="https://www.quora.com/profile/Garrick-Kogola" aria-label="Quora">
-                    <img src="https://cdn-icons-png.flaticon.com/128/174/174865.png" alt="Quora Logo" width="24" height="24">
+                    <img src="https://cdn-icons-png.flaticon.com/128/174/174865.png" alt="Quora Logo" width="24"
+                        height="24">
                 </a>
             </div>
         </div>
         <h3>© 2025 Garrick Kogola</h3>
     </footer>
 
+    <!-- Profile Settings Modal -->
+    <div id="profileModal" class="profile-modal">
+        <div class="profile-modal-content">
+            <div class="profile-modal-header">
+                <h2><i class="fas fa-user-circle"></i> Profile Settings</h2>
+                <button class="close-modal" onclick="closeProfileModal()">&times;</button>
+            </div>
+
+            <div class="profile-modal-body">
+                <!-- Avatar Section -->
+                <div class="avatar-upload-section">
+                    <div class="avatar-preview" onclick="document.getElementById('avatarInput').click()">
+                        <img id="modal-avatar-img"
+                            src="https://ui-avatars.com/api/?background=2ecc71&color=fff&bold=true&size=120&length=2"
+                            alt="Avatar">
+                        <div class="avatar-upload-overlay">
+                            <i class="fas fa-camera"></i>
+                            <span>Change Photo</span>
+                        </div>
+                    </div>
+                    <input type="file" id="avatarInput" accept="image/jpeg,image/png,image/gif" style="display: none;"
+                        onchange="uploadProfilePicture(this)">
+                    <p class="avatar-hint">Click to upload profile picture</p>
+                </div>
+
+                <!-- Profile Form -->
+                <div class="profile-form">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Display Name</label>
+                        <input type="text" id="profile-name" placeholder="Your name" class="profile-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" id="profile-email" readonly class="profile-input readonly">
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar"></i> Member Since</label>
+                        <input type="text" id="profile-joined" readonly class="profile-input readonly">
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-palette"></i> Theme Preference</label>
+                        <select id="profile-theme" class="profile-select">
+                            <option value="dark">🌙 Dark Mode</option>
+                            <option value="light">☀️ Light Mode</option>
+                            <option value="auto">🔄 Auto (System)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-bell"></i> Email Notifications</label>
+                        <label class="toggle-switch-small">
+                            <input type="checkbox" id="profile-notifications">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="footer-profile">
+                        <div class="profile-avatar" onclick="document.getElementById('avatarInput').click()">
+                            <img id="user-profile-pic"
+                                src="https://ui-avatars.com/api/?background=2ecc71&color=fff&bold=true&size=80&length=2&name=User"
+                                alt="Profile" class="profile-img">
+                            <div class="profile-overlay">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                        </div>
+                        <input type="file" id="avatarInput" accept="image/jpeg,image/png,image/gif"
+                            style="display: none;" onchange="uploadProfilePicture(this)">
+                        <div class="profile-info">
+                            <h3 id="profile-display-name">Guest User</h3>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="profile-modal-footer">
+                <button onclick="saveProfileSettings()" class="save-profile-btn">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+                <button onclick="closeProfileModal()" class="cancel-profile-btn">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+    <h3>© 2025 Garrick Kogola</h3>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="kidszone.js"></script>
+
 </body>
 
 </html>

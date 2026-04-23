@@ -9,11 +9,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log("DOM Loaded - Starting app");
     const store = new StudyDataStore();
     window.app = new StudyAppUI(store);
-    
+
     // Check if user is already logged in
     const { data: { session }, error: sessionError } = await _supabase.auth.getSession();
     console.log("Session check:", session ? "Has session" : "No session");
-    
+
     if (sessionError) {
         console.error("Session error:", sessionError);
     }
@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log("User logged in:", session.user.id);
         await store.fetchAll(session.user.id);
         await window.app.diary.fetchEntries(session.user.id);
+        await loadUserProfile();
         showAppContent(session.user);
     } else {
         console.log("No session - showing login overlay");
@@ -78,7 +79,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (error.message === "Invalid login credentials") {
                     alert("Login failed: Wrong email or password. Please sign up first if you don't have an account.");
                 } else {
-                    alert("Login failed: " + error.message);
+                    toast.error(error.message, { title: "Login Failed" });
                 }
             } else {
                 console.log("Login successful!", data.user.id);
@@ -87,9 +88,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // Save profile
                 const { error: profileError } = await _supabase
                     .from('profiles')
-                    .upsert({ 
-                        id: profiles_id, 
-                        firstname: data.user.user_metadata?.firstname || "Guest" 
+                    .upsert({
+                        id: profiles_id,
+                        firstname: data.user.user_metadata?.firstname || "Guest"
                     });
 
                 if (profileError) {
@@ -99,6 +100,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 await store.fetchAll(profiles_id);
                 await window.app.diary.fetchEntries(profiles_id);
                 showAppContent(data.user);
+                await loadUserProfile();
             }
         });
     }
@@ -137,8 +139,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 email: email,
                 password: password,
                 options: {
-                    data: { 
-                        firstname: firstName 
+                    data: {
+                        firstname: firstName
                     }
                 }
             });
@@ -152,14 +154,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             } else {
                 console.log("Signup successful!", data);
-                alert("Account created successfully! You can now login.");
-                
+                toast.success("You can now log in with your credentials", { title: "Account Created" });
+
                 // Switch to login form
                 const signupStepDiv = document.getElementById('signup-step');
                 const loginStepDiv = document.getElementById('login-step');
                 if (signupStepDiv) signupStepDiv.style.display = 'none';
                 if (loginStepDiv) loginStepDiv.style.display = 'block';
-                
+
                 // Clear signup form
                 document.getElementById('email-input').value = '';
                 document.getElementById('password-input').value = '';
@@ -172,7 +174,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 function showAppContent(user) {
     console.log("Showing app content for user:", user.id);
-    
+
     const hour = new Date().getHours();
     let greeting = "Good evening";
     if (hour < 12) greeting = "Good morning";
@@ -224,7 +226,140 @@ function showAppContent(user) {
     window.app.start();
 }
 
+// Professional Toast Notification System
+class ToastManager {
+    constructor() {
+        this.container = null;
+        this.toasts = [];
+        this.createContainer();
+    }
+
+    createContainer() {
+
+        if (!document.getElementById('toast-container')) {
+            const container = document.createElement('div');
+            container.id = 'toast-container';
+            container.style.position = 'fixed';
+            container.style.bottom = '20px';
+            container.style.right = '20px';
+            container.style.zIndex = '10000';
+            container.style.display = 'flex';
+            container.style.flexDirection = 'column';
+            container.style.gap = '10px';
+            document.body.appendChild(container);
+            this.container = container;
+        } else {
+            this.container = document.getElementById('toast-container');
+        }
+    }
+
+    show(message, options = {}) {
+        const {
+            type = 'success',
+            duration = 3000,
+            title = '',
+            position = 'bottom-right'
+        } = options;
+
+        const toast = document.createElement('div');
+        toast.className = `toast-notification ${position}`;
+
+        let iconHtml = '';
+        switch (type) {
+            case 'success':
+                iconHtml = '<i class="fas fa-check-circle"></i>';
+                break;
+            case 'error':
+                iconHtml = '<i class="fas fa-exclamation-circle"></i>';
+                break;
+            case 'info':
+                iconHtml = '<i class="fas fa-info-circle"></i>';
+                break;
+            case 'warning':
+                iconHtml = '<i class="fas fa-exclamation-triangle"></i>';
+                break;
+        }
+
+        toast.innerHTML = `
+            <div class="toast-content">
+                <div class="toast-icon ${type}">${iconHtml}</div>
+                <div class="toast-message">
+                    ${title ? `<strong>${title}</strong><br>` : ''}
+                    ${message}
+                    ${duration === 0 ? '<small>Click to dismiss</small>' : ''}
+                </div>
+                <button class="toast-close">&times;</button>
+            </div>
+            ${duration > 0 ? '<div class="toast-progress"><div class="toast-progress-bar"></div></div>' : ''}
+        `;
+
+        // Adjust container position based on toast position
+        if (position.includes('top')) {
+            this.container.style.top = '20px';
+            this.container.style.bottom = 'auto';
+        } else {
+            this.container.style.bottom = '20px';
+            this.container.style.top = 'auto';
+        }
+
+        if (position.includes('left')) {
+            this.container.style.left = '20px';
+            this.container.style.right = 'auto';
+        } else {
+            this.container.style.right = '20px';
+            this.container.style.left = 'auto';
+        }
+
+        this.container.appendChild(toast);
+
+        // Animate in
+        setTimeout(() => toast.classList.add('show'), 10);
+
+        // Close button
+        const closeBtn = toast.querySelector('.toast-close');
+        closeBtn.addEventListener('click', () => this.dismiss(toast));
+
+        // Auto dismiss
+        if (duration > 0) {
+            setTimeout(() => this.dismiss(toast), duration);
+        } else {
+            toast.style.cursor = 'pointer';
+            toast.addEventListener('click', () => this.dismiss(toast));
+        }
+
+        this.toasts.push(toast);
+        return toast;
+    }
+
+    dismiss(toast) {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            if (toast.parentNode) toast.parentNode.removeChild(toast);
+            this.toasts = this.toasts.filter(t => t !== toast);
+        }, 300);
+    }
+
+    success(message, options = {}) {
+        return this.show(message, { ...options, type: 'success' });
+    }
+
+    error(message, options = {}) {
+        return this.show(message, { ...options, type: 'error' });
+    }
+
+    info(message, options = {}) {
+        return this.show(message, { ...options, type: 'info' });
+    }
+
+    warning(message, options = {}) {
+        return this.show(message, { ...options, type: 'warning' });
+    }
+}
+
+window.toast = new ToastManager();
+
 class StudyDataStore {
+
     constructor() {
         this.data = [];
     }
@@ -272,7 +407,7 @@ class StudyDataStore {
             .eq('id', id);
 
         if (error) throw error;
-        
+
         const index = this.data.findIndex(item => item.id === id);
         if (index !== -1) {
             this.data[index] = { ...this.data[index], ...updates };
@@ -367,12 +502,14 @@ class PasscodeManager {
                 document.getElementById('final-unlock').style.display = 'block';
             }
         } else {
-            alert("Wrong! Try again.");
+            toast.error("Incorrect answer. Try again!", { title: "Challenge Failed" });
         }
     }
 }
 
 class StudyAppUI {
+
+
     constructor(store) {
         this.store = store;
         this.chart = null;
@@ -497,7 +634,7 @@ class StudyAppUI {
     async addRow() {
         const { data: { session } } = await _supabase.auth.getSession();
         const user = session?.user;
-        if (!user) { alert("You must be logged in!"); return; }
+        if (!user) { toast.warning("Please log in to add study entries", { title: "Authentication Required" }); return; }
 
         const dateVal = document.getElementById('newDate').value;
         if (!dateVal) { alert("Please select a date!"); return; }
@@ -516,8 +653,38 @@ class StudyAppUI {
             await this.store.fetchAll(user.id);
             this.render();
         } catch (e) {
-            alert("Error saving: " + e.message);
+            toast.error(e.message, { title: "Save Failed" });
         }
+    }
+
+
+    async handleImport() {
+        const fileInput = document.getElementById('csvFileInput');
+        const file = fileInput.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+            const text = e.target.result;
+            const lines = text.split('\n');
+            const headers = lines[0].split(',');
+
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                const values = lines[i].split(',');
+                const entry = {
+                    date: values[0],
+                    lessons: parseInt(values[1]) || 0,
+                    friends: parseInt(values[2]) || 0,
+                    writing: parseInt(values[3]) || 0,
+                    outdoor: parseInt(values[4]) || 0
+                };
+                await this.addRowFromImport(entry);
+            }
+            alert("Import complete!");
+            this.render();
+        };
+        reader.readAsText(file);
     }
 
     async render() {
@@ -614,6 +781,8 @@ class StudyAppUI {
             window.location.reload();
         }
     }
+
+
 }
 
 class DiaryManager {
@@ -707,6 +876,30 @@ class DiaryManager {
         }
     }
 
+    searchEntries(query) {
+        if (!query || query.trim() === "") {
+            document.getElementById('searchResults').style.display = 'none';
+            return;
+        }
+
+        const results = Object.values(this.entries).filter(entry =>
+            entry.text?.toLowerCase().includes(query.toLowerCase()) ||
+            entry.tasks?.some(task => task.toLowerCase().includes(query.toLowerCase()))
+        );
+
+        const resultsDiv = document.getElementById('searchResults');
+        if (results.length === 0) {
+            resultsDiv.innerHTML = '<div class="search-result-item">No results found</div>';
+        } else {
+            resultsDiv.innerHTML = results.map(entry => `
+            <div class="search-result-item" onclick="app.diary.openEntry('${entry.date}')">
+                <strong>${entry.date}</strong>: ${entry.text?.substring(0, 50)}...
+            </div>
+        `).join('');
+        }
+        resultsDiv.style.display = 'block';
+    }
+
     async removeTask(index) {
         const { data: { session } } = await _supabase.auth.getSession();
         const user = session?.user;
@@ -794,19 +987,20 @@ class DiaryManager {
         this.renderCalendar();
     }
 
-    prevMonth() { 
-        this.currentDate.setMonth(this.currentDate.getMonth() - 1); 
-        this.renderCalendar(); 
+    prevMonth() {
+        this.currentDate.setMonth(this.currentDate.getMonth() - 1);
+        this.renderCalendar();
     }
-    
-    nextMonth() { 
-        this.currentDate.setMonth(this.currentDate.getMonth() + 1); 
-        this.renderCalendar(); 
+
+    nextMonth() {
+        this.currentDate.setMonth(this.currentDate.getMonth() + 1);
+        this.renderCalendar();
     }
 }
 
-// Make functions available globally
-window.toggleChart = function(chartId) {
+
+
+window.toggleChart = function (chartId) {
     document.getElementById('chart-placeholder-text').style.display = 'none';
     document.querySelectorAll('.chart-wrapper').forEach(wrapper => {
         wrapper.style.display = 'none';
@@ -829,26 +1023,127 @@ window.toggleChart = function(chartId) {
 };
 
 // Slideshow code
+// Slideshow images - Combined collection (Landscapes + Study themed)
 var images = [
-    "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1600",
+    // ========== STUDY & EDUCATION THEMED ==========
+    "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1600",
+    "https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1600",
+    "https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=1600",
+    "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=1600",
+    "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=1600",
+    "https://images.unsplash.com/photo-1491841550275-ad7854e35ca6?w=1600",
+    "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=1600",
+    "https://images.unsplash.com/photo-1501351955260-111b16bb0f0f?w=1600",
+    "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1600",
+    "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=1600",
+    "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=1600",
+    "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=1600",
+    "https://images.unsplash.com/photo-1513258496099-48168024aec0?w=1600",
+    "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=1600",
+    "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1600",
+    "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1600",
+    "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=1600",
+    "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=1600",
+    "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=1600",
+    "https://images.unsplash.com/photo-1456324504439-367cee3b3c32?w=1600",
+    
+    // ========== NATURE & LANDSCAPES ==========
+    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600",
+    "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1600",
     "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1600",
+    "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1600",
     "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1600",
-    "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1600",
     "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1600",
-    "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1600",
-    "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=1600",
+    "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1600",
+    "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1600",
+    
+    // ========== MOUNTAINS & ADVENTURE ==========
+    "https://images.unsplash.com/photo-1454496522488-7a8e488e8606?w=1600",
+    "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1600",
+    "https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=1600",
+    "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1600",
+    
+    // ========== CITIES & ARCHITECTURE ==========
+    "https://images.unsplash.com/photo-1444723121867-7a241cacace0?w=1600",
+    "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=1600",
+    "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1600",
+    "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=1600",
+    "https://images.unsplash.com/photo-1485738422979-f5c462d49f74?w=1600",
+    
+    // ========== BEACHES & OCEANS ==========
+    "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600",
+    "https://images.unsplash.com/photo-1439405326854-014607f694d7?w=1600",
+    "https://images.unsplash.com/photo-1532972190885-39314c1dd93e?w=1600",
+    "https://images.unsplash.com/photo-1506953829328-27f2b71b9c4f?w=1600",
+    
+    // ========== FORESTS & TREES ==========
+    "https://images.unsplash.com/photo-1448375240586-882707db888b?w=1600",
+    "https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?w=1600",
+    "https://images.unsplash.com/photo-1425913397330-cf8af2ff40a1?w=1600",
+    "https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=1600",
+    
+    // ========== SUNSETS & SUNRISES ==========
+    "https://images.unsplash.com/photo-1503803548695-c2a7b4a5b875?w=1600",
+    "https://images.unsplash.com/photo-1495616811223-4d98c6e9c869?w=1600",
+    "https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?w=1600",
+    "https://images.unsplash.com/photo-1444080748397-f442aa95c3e5?w=1600",
+    
+    // ========== WATERFALLS & RIVERS ==========
+    "https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?w=1600",
+    "https://images.unsplash.com/photo-1473188588951-666fce8e7c68?w=1600",
+    "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=1600",
+    
+    // ========== SNOW & WINTER ==========
+    "https://images.unsplash.com/photo-1483921020237-2ff51e8e4b22?w=1600",
+    "https://images.unsplash.com/photo-1478265409131-1f65c88f965c?w=1600",
+    "https://images.unsplash.com/photo-1491002052546-bf38f186af56?w=1600",
+    
+    // ========== DESERTS ==========
+    "https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=1600",
+    "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1600",
+    
+    // ========== SPACE & STARS ==========
     "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=1600",
-    "https://images.unsplash.com/photo-1514565131-fce0801e5785?w=1600",
-    "https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?w=1600"
+    "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=1600",
+    "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=1600",
+    "https://images.unsplash.com/photo-1506703719100-f0b3c0c7e4b9?w=1600",
+    
+    // ========== ANIMALS ==========
+    "https://images.unsplash.com/photo-1474511320723-9a56873867b5?w=1600",
+    "https://images.unsplash.com/photo-1535268647677-300dbf3d6d1b?w=1600",
+    "https://images.unsplash.com/photo-1484406566174-9da000fda645?w=1600",
+    
+    // ========== FLOWERS & GARDENS ==========
+    "https://images.unsplash.com/photo-1490750967868-88aa4476b946?w=1600",
+    "https://images.unsplash.com/photo-1491147334573-44c6dbe4f64a?w=1600",
+    "https://images.unsplash.com/photo-1457100019745-aeb21a5eb517?w=1600",
+    
+    // ========== MORE BEAUTIFUL LANDSCAPES ==========
+    "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1600",
+    "https://images.unsplash.com/photo-1502657877623-f66bf489d236?w=1600",
+    "https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=1600",
+    "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=1600",
+    "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1600",
+    "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?w=1600",
+    "https://images.unsplash.com/photo-1510784722466-f2aa9c52fed6?w=1600",
+    "https://images.unsplash.com/photo-1532274402911-5a3b04759bb2?w=1600",
+    "https://images.unsplash.com/photo-1433086566711-470233665e72?w=1600",
+    "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=1600",
+    "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1600",
+    "https://images.unsplash.com/photo-1470115636491-c59c5070f73b?w=1600",
+    "https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=1600",
+    "https://images.unsplash.com/photo-1490730141103-6cac27aaab94?w=1600",
+    "https://images.unsplash.com/photo-1493246507139-91e8bef99c02?w=1600",
+    "https://images.unsplash.com/photo-1444464666168-49d633b86797?w=1600",
+    "https://images.unsplash.com/photo-1445964047600-cdbdb873673d?w=1600"
 ];
-
 var index = 0;
 var slideElement = document.getElementById("slideshow");
 
 function changeImage() {
     if (!slideElement) return;
     slideElement.style.opacity = 0;
-    setTimeout(function() {
+    setTimeout(function () {
         index++;
         if (index >= images.length) { index = 0; }
         slideElement.src = images[index];
@@ -856,7 +1151,427 @@ function changeImage() {
     }, 1500);
 }
 
+
 if (slideElement) {
     setInterval(changeImage, 5000);
     slideElement.src = images[0];
 }
+
+function downloadCSV() {
+    console.log("Download button clicked");
+
+    if (!window.app || !window.app.store) {
+        alert("App not ready. Please wait.");
+        return;
+    }
+
+    const data = window.app.store.data;
+
+    if (!data || data.length === 0) {
+        toast.error("No study data found", { title: "Cannot Download" });
+        return;
+    }
+
+    let csv = "Date,Lessons,Social,Writing,Outdoor\n";
+    for (const row of data) {
+        csv += `"${row.date || ""}",${row.lessons || 0},${row.friends || 0},${row.writing || 0},${row.outdoor || 0}\n`;
+    }
+
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `study_data_${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    toast.success(`Downloaded ${data.length} records`, { title: "Download Complete" });
+}
+
+// ============================================
+// COMPLETE PROFILE SYSTEM WITH PICTURE UPLOAD
+// ============================================
+
+// Load user profile
+async function loadUserProfile() {
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (!session) return;
+
+    const userId = session.user.id;
+    const email = session.user.email;
+    const firstName = session.user.user_metadata?.firstname || email.split('@')[0];
+
+    try {
+        // Get profile from database
+        let { data: profile, error } = await _supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', userId)
+            .maybeSingle();
+
+        // If no profile exists, create one
+        if (!profile) {
+            const { data: newProfile, error: insertError } = await _supabase
+                .from('profiles')
+                .insert({
+                    id: userId,
+                    firstname: firstName,
+                    created_at: new Date(),
+                    updated_at: new Date()
+                })
+                .select()
+                .single();
+
+            if (!insertError && newProfile) {
+                profile = newProfile;
+            }
+        }
+
+        // Update UI with profile data
+        const displayName = profile?.firstname || firstName;
+        document.getElementById('profile-display-name').innerText = displayName;
+
+        const nameInput = document.getElementById('profile-name');
+        if (nameInput) nameInput.value = displayName;
+
+        const emailInput = document.getElementById('profile-email');
+        if (emailInput) emailInput.value = email;
+
+        // Member since
+        const joinedDate = profile?.created_at ? new Date(profile.created_at).toLocaleDateString() : new Date().toLocaleDateString();
+        const joinedInput = document.getElementById('profile-joined');
+        if (joinedInput) joinedInput.value = joinedDate;
+
+        // Theme preference
+        const savedTheme = profile?.theme || 'dark';
+        const themeSelect = document.getElementById('profile-theme');
+        if (themeSelect) themeSelect.value = savedTheme;
+
+        // Notifications preference
+        const notifCheckbox = document.getElementById('profile-notifications');
+        if (notifCheckbox) notifCheckbox.checked = profile?.notifications ?? true;
+
+        // Handle avatar
+        let avatarUrl = profile?.avatar_url;
+        if (!avatarUrl || avatarUrl === '') {
+            // Generate avatar with initials
+            const initial = displayName.charAt(0).toUpperCase();
+            avatarUrl = `https://ui-avatars.com/api/?background=2ecc71&color=fff&bold=true&size=120&length=1&name=${initial}`;
+        }
+
+        // Update all avatar images
+        const footerAvatar = document.getElementById('user-profile-pic');
+        const modalAvatar = document.getElementById('modal-avatar-img');
+
+        if (footerAvatar) footerAvatar.src = avatarUrl;
+        if (modalAvatar) modalAvatar.src = avatarUrl;
+
+        // Apply theme
+        applyTheme(savedTheme);
+
+    } catch (error) {
+        console.error('Error loading profile:', error);
+    }
+}
+
+// Upload profile picture - WORKING VERSION
+async function uploadProfilePicture(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    // Validate file
+    if (!file.type.startsWith('image/')) {
+        showNotification('Please select an image file', 'error');
+        return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+        showNotification('Image must be less than 2MB', 'error');
+        return;
+    }
+
+    // Show loading
+    const modalAvatar = document.getElementById('modal-avatar-img');
+    const originalSrc = modalAvatar?.src;
+    if (modalAvatar) {
+        modalAvatar.style.opacity = '0.5';
+    }
+
+    // Convert to base64
+    const reader = new FileReader();
+    reader.onload = async function (e) {
+        const base64Image = e.target.result;
+
+        // Update preview
+        if (modalAvatar) {
+            modalAvatar.src = base64Image;
+            modalAvatar.style.opacity = '1';
+        }
+
+        // Save to Supabase
+        const { data: { session } } = await _supabase.auth.getSession();
+        if (!session) {
+            showNotification('Please login first', 'error');
+            return;
+        }
+
+        const { error } = await _supabase
+            .from('profiles')
+            .update({
+                avatar_url: base64Image,
+                updated_at: new Date()
+            })
+            .eq('id', session.user.id);
+
+        if (error) {
+            console.error('Upload error:', error);
+            showNotification('Failed to save image', 'error');
+            // Revert on error
+            if (modalAvatar) modalAvatar.src = originalSrc;
+        } else {
+            showNotification('Profile picture updated!', 'success');
+            // Update footer avatar
+            const footerAvatar = document.getElementById('user-profile-pic');
+            if (footerAvatar) footerAvatar.src = base64Image;
+        }
+    };
+
+    reader.onerror = function () {
+        showNotification('Error reading file', 'error');
+        if (modalAvatar) modalAvatar.style.opacity = '1';
+    };
+
+    reader.readAsDataURL(file);
+}
+
+// Save profile settings
+async function saveProfileSettings() {
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (!session) {
+        showNotification('Please login first', 'error');
+        return;
+    }
+
+    const displayName = document.getElementById('profile-name')?.value.trim();
+    const theme = document.getElementById('profile-theme')?.value;
+    const notifications = document.getElementById('profile-notifications')?.checked;
+
+    if (!displayName) {
+        showNotification('Please enter a display name', 'error');
+        return;
+    }
+
+    // Show saving state
+    const saveBtn = document.querySelector('.save-profile-btn');
+    if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    }
+
+    try {
+        const { error } = await _supabase
+            .from('profiles')
+            .update({
+                firstname: displayName,
+                theme: theme,
+                notifications: notifications,
+                updated_at: new Date()
+            })
+            .eq('id', session.user.id);
+
+        if (error) throw error;
+
+        // Update UI
+        document.getElementById('profile-display-name').innerText = displayName;
+
+        // Update greeting
+        const greetingElement = document.getElementById('main-greeting');
+        if (greetingElement) {
+            const hour = new Date().getHours();
+            let greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+            greetingElement.innerText = `${greeting}, ${displayName}`;
+        }
+
+        // Update avatar initials if no custom avatar
+        const currentAvatar = document.getElementById('user-profile-pic')?.src;
+        if (currentAvatar && currentAvatar.includes('ui-avatars.com')) {
+            const initial = displayName.charAt(0).toUpperCase();
+            const newAvatar = `https://ui-avatars.com/api/?background=2ecc71&color=fff&bold=true&size=120&length=1&name=${initial}`;
+            document.getElementById('user-profile-pic').src = newAvatar;
+            document.getElementById('modal-avatar-img').src = newAvatar;
+        }
+
+        // Apply theme
+        applyTheme(theme);
+
+        showNotification('Profile settings saved!', 'success');
+        closeProfileModal();
+
+    } catch (error) {
+        console.error('Save error:', error);
+        showNotification('Failed to save settings', 'error');
+    } finally {
+        if (saveBtn) {
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+        }
+    }
+}
+
+// Apply theme (light/dark)
+function applyTheme(theme) {
+    if (theme === 'light') {
+        document.body.classList.add('light-theme');
+        document.body.classList.remove('dark-theme');
+    } else if (theme === 'dark') {
+        document.body.classList.add('dark-theme');
+        document.body.classList.remove('light-theme');
+    }
+}
+
+// Show notification (uses toast if available)
+function showNotification(message, type = 'success') {
+    if (window.toast) {
+        if (type === 'success') toast.success(message);
+        else if (type === 'error') toast.error(message);
+        else toast.info(message);
+    } else {
+        alert(message);
+    }
+}
+
+// Profile modal functions
+function openProfileModal() {
+    const modal = document.getElementById('profileModal');
+    if (modal) {
+        loadUserProfile();
+        modal.style.display = 'flex';
+        setTimeout(() => modal.classList.add('show'), 10);
+    }
+}
+
+// Upload profile picture
+async function uploadProfilePicture(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    // Check file size (max 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+        alert('Image too large! Max 2MB');
+        return;
+    }
+
+    // Check file type
+    if (!file.type.startsWith('image/')) {
+        alert('Please select an image file');
+        return;
+    }
+
+    // Convert to base64
+    const reader = new FileReader();
+    reader.onload = async function (e) {
+        const imageUrl = e.target.result;
+
+        // Update profile picture preview
+        document.getElementById('user-profile-pic').src = imageUrl;
+
+        // Save to database
+        const { data: { session } } = await _supabase.auth.getSession();
+        if (session) {
+            const { error } = await _supabase
+                .from('profiles')
+                .upsert({
+                    id: session.user.id,
+                    avatar_url: imageUrl,
+                    firstname: session.user.user_metadata?.firstname || session.user.email.split('@')[0]
+                });
+
+            if (error) {
+                console.error('Save error:', error);
+                alert('Failed to save picture');
+            } else {
+                alert('Profile picture updated!');
+            }
+        }
+    };
+    reader.readAsDataURL(file);
+}
+
+// Load profile picture when page loads
+async function loadProfilePicture() {
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (!session) return;
+
+    const { data: profile } = await _supabase
+        .from('profiles')
+        .select('avatar_url, firstname')
+        .eq('id', session.user.id)
+        .single();
+
+    if (profile) {
+        if (profile.avatar_url) {
+            document.getElementById('user-profile-pic').src = profile.avatar_url;
+        }
+        if (profile.firstname) {
+            document.getElementById('profile-display-name').innerText = profile.firstname;
+        }
+    }
+}
+
+function closeProfileModal() {
+    const modal = document.getElementById('profileModal');
+    if (modal) {
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 300);
+    }
+}
+
+function openProfileSettings() {
+    openProfileModal();
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function (e) {
+    const modal = document.getElementById('profileModal');
+    if (e.target === modal) {
+        closeProfileModal();
+    }
+});
+
+// Add this to your existing showAppContent function
+const originalShowAppContent = window.showAppContent;
+if (originalShowAppContent) {
+    window.showAppContent = async function (user) {
+        await originalShowAppContent(user);
+        await loadUserProfile();
+        await loadProfilePicture();
+    };
+}
+
+// Apply privacy settings to main app
+function applyPrivacySettings() {
+    const settings = JSON.parse(localStorage.getItem('privacy_settings_cached') || '{}');
+    
+    // Disable analytics if user opted out
+    if (settings.analytics === false) {
+        console.log('📊 Analytics disabled by user');
+        // Disable any tracking calls here
+    }
+    
+    // Disable personalization if opted out  
+    if (settings.personalization === false) {
+        console.log('🎯 Personalization disabled by user');
+        // Disable recommendation features
+    }
+    
+    // Apply cookie preferences
+    if (settings.cookies === false) {
+        console.log('🍪 Non-essential cookies disabled');
+        // Disable non-essential cookies
+    }
+}
+
+// Call this when app starts
+applyPrivacySettings();
