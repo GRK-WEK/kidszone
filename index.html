@@ -10,22 +10,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" href="data:,">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/date-fns/dist/date-fns.umd.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/date-fns@4.1.0/cdn.min.js"></script>
-
     <link rel="stylesheet" href="kidszone.css" />
 </head>
 
 <body>
-
-
-
     <div id="login-overlay" style="display: flex; justify-content: center; align-items: center;">
-
         <div id="signup-step" class="wrapper">
             <h1>Sign Up</h1>
             <p id="error-message"></p>
@@ -69,37 +61,22 @@
     </div>
 
     <div class="login-card">
-
         <h2 style="color: white;">Security Challenge</h2>
         <div id="toast-container">Nice try! 😉</div>
 
         <div id="code-display" style="display: flex; justify-content: center; gap: 8px; margin: 20px 0;">
-
-            <div class="code-slot" id="slot-0">
-            </div>
-
-            <div class="code-slot" id="slot-1">?
-            </div>
-
-            <div class="code-slot" id="slot-2">?
-            </div>
-
-            <div class="code-slot" id="slot-3">?
-            </div>
-
-            <div class="code-slot" id="slot-4">?
-            </div>
-
-            <div class="code-slot" id="slot-5">?
-            </div>
+            <div class="code-slot" id="slot-0"></div>
+            <div class="code-slot" id="slot-1">?</div>
+            <div class="code-slot" id="slot-2">?</div>
+            <div class="code-slot" id="slot-3">?</div>
+            <div class="code-slot" id="slot-4">?</div>
+            <div class="code-slot" id="slot-5">?</div>
         </div>
 
         <div id="question-sequence">
             <p id="quest-text" style="color: #00fff7;">Loading...</p>
             <input type="text" id="quest-answer" placeholder="Your answer...">
-            <button class="add-btn" style="width: 100%; margin-top: 10px;" onclick="app.passcode.checkAnswer()">Submit
-                Answer</button>
-
+            <button class="add-btn" style="width: 100%; margin-top: 10px;" onclick="app.passcode.checkAnswer()">Submit Answer</button>
             <p style="margin-top:15px; font-size:11px; color:rgba(0, 0, 0, 0.4); cursor:pointer; text-decoration:underline;"
                 onclick="app.passcode.toggleBypass(true)">
                 I already know the code
@@ -119,8 +96,6 @@
             <p style="color: #2ecc71; font-weight: bold;">ACCESS GRANTED</p>
             <button class="add-btn" style="width: 100%;" onclick="app.start()">Enter Workspace</button>
         </div>
-
-    </div>
     </div>
 
     <div class="slideshow-container">
@@ -138,7 +113,6 @@
     </nav>
 
     <main class="tracker-container" id="app-content" style="display: none;">
-
         <section id="graph-page" class="app-page" style="display: block;">
             <div class="card chart-card">
                 <div class="analytics-header">
@@ -148,33 +122,28 @@
 
                 <div class="chart-container" style="height: 350px; position: relative; margin-bottom: 20px;">
                     <canvas id="timeChart"></canvas>
-
                 </div>
+
                 <div class="date-controls-row">
                     <div class="filter-group">
                         <label><i class="far fa-calendar-alt"></i> Start Date</label>
                         <input type="date" id="filterStart" onchange="app.updateChart()">
                     </div>
-
                     <div class="filter-group">
                         <label><i class="far fa-calendar-alt"></i> End Date</label>
                         <input type="date" id="filterEnd" onchange="app.updateChart()">
                     </div>
-
                     <div class="filter-group selector-group">
                         <label><i class="fas fa-chart-pie"></i> Chart Type</label>
-                        <select id="chartTypeSelector" onchange="app.changeChartType(this.value)"
-                            class="chart-selector">
+                        <select id="chartTypeSelector" onchange="app.changeChartType(this.value)" class="chart-selector">
                             <optgroup label="Select Chart Type">
                                 <option value="bar">Bar Chart</option>
                                 <option value="pie">Pie Chart</option>
                                 <option value="line">Line Chart</option>
                                 <option value="radar">Radar Chart</option>
-
                             </optgroup>
                         </select>
                     </div>
-
                     <button id="logout-btn" onclick="app.handleSignOut()" class="logout-btn">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -186,13 +155,11 @@
                         Logout
                     </button>
                 </div>
-
                 <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-
             </div>
         </section>
-        <section id="tracker-page" class="app-page" style="display: none;">
 
+        <section id="tracker-page" class="app-page" style="display: none;">
             <div class="summary-grid">
                 <div class="mini-card"><small>Lessons</small>
                     <h2 id="sum-lessons">0m</h2>
@@ -207,36 +174,33 @@
                     <h2 id="sum-outdoor">0m</h2>
                 </div>
             </div>
+
             <div class="card quick-add-card">
                 <div class="quick-add-form" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end;">
                     <div>
                         <label style="display:block; font-size: 12px;">Date</label>
-                        <input type="date" id="newDate"
-                            style="padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
+                        <input type="date" id="newDate" style="padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
                     </div>
                     <div>
                         <label style="display:block; font-size: 12px;">Lessons</label>
-                        <input type="number" id="newLessons" placeholder="min"
-                            style="width: 70px; padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
+                        <input type="number" id="newLessons" placeholder="min" style="width: 70px; padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
                     </div>
                     <div>
                         <label style="display:block; font-size: 12px;">Social</label>
-                        <input type="number" id="newFriends" placeholder="min"
-                            style="width: 70px; padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
+                        <input type="number" id="newFriends" placeholder="min" style="width: 70px; padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
                     </div>
                     <div>
                         <label style="display:block; font-size: 12px;">Writing</label>
-                        <input type="number" id="newWriting" placeholder="min"
-                            style="width: 70px; padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
+                        <input type="number" id="newWriting" placeholder="min" style="width: 70px; padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
                     </div>
                     <div>
                         <label style="display:block; font-size: 12px;">Outdoor</label>
-                        <input type="number" id="newOutdoor" placeholder="min"
-                            style="width: 70px; padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
+                        <input type="number" id="newOutdoor" placeholder="min" style="width: 70px; padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
                     </div>
                     <button onclick="app.addRow()" class="add-btn">Add Row</button>
                 </div>
             </div>
+
             <div class="card table-card">
                 <div class="table-responsive">
                     <table>
@@ -261,19 +225,16 @@
                         <i class="fas fa-tools"></i> <span>Workspace Settings</span>
                     </div>
                     <div class="import-controls">
-                        <input type="file" id="csvFileInput" accept=".csv" style="display:none;"
-                            onchange="app.handleImport()">
-
+                        <input type="file" id="csvFileInput" accept=".csv" style="display:none;" onchange="app.handleImport()">
                         <button onclick="document.getElementById('csvFileInput').click()" class="btn-ghost">
                             <i class="fas fa-file-upload"></i> IMPORT CSV
                         </button>
                         <button onclick="app.downloadTemplate()" class="btn-ghost">
-                            <i class="fas fa-download"></i>DOWNLOAD
+                            <i class="fas fa-download"></i> DOWNLOAD
                         </button>
                         <button onclick="app.resetWorkspace()" class="btn-danger-soft">
                             <i class="fas fa-trash-alt"></i> Reset Workspace
                         </button>
-
                     </div>
                 </div>
             </div>
@@ -281,8 +242,7 @@
 
         <section id="diary-page" class="app-page" style="display:none;">
             <div class="card" style="margin-bottom: 15px; padding: 10px;">
-                <input type="text" id="diarySearch" placeholder="🔍 Search old entries..."
-                    oninput="app.diary.searchEntries(this.value)"
+                <input type="text" id="diarySearch" placeholder="🔍 Search old entries..." oninput="app.diary.searchEntries(this.value)"
                     style="width:100%; padding:8px; border:1px solid #ddd; border-radius:6px;">
                 <div id="searchResults" style="max-height: 150px; overflow-y: auto;"></div>
             </div>
@@ -322,10 +282,8 @@
                             <i class="fas fa-check-double"></i> Today's Tasks
                         </label>
                         <div class="task-input-group" style="display: flex; gap: 8px;">
-                            <input type="text" id="newTaskInput" placeholder="Enter a task..."
-                                style="flex-grow: 1; padding: 8px; border-radius: 6px; border: 1px solid #ccc;">
-                            <button onclick="app.diary.addTask()" class="add-btn"
-                                style="padding: 8px 15px; background: #0f993d; border: none; border-radius: 6px; cursor: pointer; color: #000;">
+                            <input type="text" id="newTaskInput" placeholder="Enter a task..." style="flex-grow: 1; padding: 8px; border-radius: 6px; border: 1px solid #ccc;">
+                            <button onclick="app.diary.addTask()" class="add-btn" style="padding: 8px 15px; background: #0f993d; border: none; border-radius: 6px; cursor: pointer; color: #000;">
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
@@ -335,32 +293,25 @@
                     <label style="display: block; margin-bottom: 8px; font-weight: 600;">
                         <i class="fas fa-book-open"></i> Journal Entry
                     </label>
-                    <textarea id="diaryText" placeholder="Write your thoughts here..." required
-                        style="width: 100%; height: 100px; padding: 10px; border-radius: 6px; border: 1px solid #ccc; display: block;"></textarea>
-                    <span id="diaryError" style="color: #ff4d4f; font-size: 12px; display: none;">Your diary entry
-                        cannot be empty!</span>
+                    <textarea id="diaryText" placeholder="Write your thoughts here..." required style="width: 100%; height: 100px; padding: 10px; border-radius: 6px; border: 1px solid #ccc; display: block;"></textarea>
+                    <span id="diaryError" style="color: #ff4d4f; font-size: 12px; display: none;">Your diary entry cannot be empty!</span>
 
                     <button onclick="app.diary.saveEntry()" class="add-btn" style="width: 100%; margin-top: 15px;">
                         Save Daily Log
                     </button>
                 </div>
             </div>
-            </div>
         </section>
-
     </main>
 
     <footer class="main-footer">
         <div class="footer-content">
-
             <div class="greeting-box" style="text-align: center; padding: 20px;">
                 <h1 id="main-greeting" class="rainbow-text"></h1>
             </div>
 
             <div class="footer-brand">
-                <img id="user-profile-pic"
-                    src="https://lh3.googleusercontent.com/a-/ALV-UjX3DikwgxV2TSUG_l1-O33coxmg39dWSqDWiwv2czjhJFLRfag2oWw-nDXTGJ8keIKjNs8ukWRSsKiQsHo983WkmfPiP6cz1cicMI2kTI0C8-2UUpilG-H3AhfaY_rBJYMF4VsEywzbdAZzOnbVKTDvF7A3Pn_8mutnrRLlOU60yBT2WhPjav4DkbKhf6pB7I5XpnJW3GQXg3YiZxV80wUiqDG-SK9ywhwDVJwGQucNkBzoZ3qEA8t6HIS_sCuE_8P4Btx-bE99aMzR-ZtODMv17QoHUY_fVt4n5nc25_s75IdkYY4InOIb00_87vRFnL97ipINEwbl0zgYALljxBajAYUvgOxr0bPIDNDLYJ7KR8x2wGtOm2qV7kQDRoddpFW1hSs1sVK9-ge26n5NWQLYSqs-j9NV6C5AXjaFMhyW6axvwp6ad6M8LDM-R4ayFwlvcLoJMY2sbu3xTKugPGUKQgVLi6uKu_s4m8tIx47rIov10tlZgRs432mJhTdbgLlMbqCRIYUeYpYCEnekRv0hYay_O6CdoJRs0RY_bKNixKAlSx-h7dCrxkZ2W3intsmGbpab9Fa_rpgxTGyJGyXo4JxWOzuOqYX_--_FDG1fKs4AOqENrbuAnWIMbG_BT9cfMY1dnQ_J-Hp5DrHjsRL0T2QSOF_xzsIAAglknGAiR-5DUPvcSjFdG1MHh6XJGJxpLrPaIz15Za3vuWGKLULSLQaagNNqwDqdFsWXLMdfF8Rf3YKpRwGW21l4muQAH_BJ6uEI7R7d6erHDc9U6OhvNZIQ1t9JOduU-i1pq98_H7r-IoJni4rJwMSCamweyigfvNaJ4c-iBGQaPZYnHQ3FT-QTlIsykQTOTiKURVat0awqIXjsQl3aEAvGLmgdr6cgBQXfhjv0qS0p7MiaQRfsYMLGmZD2C4OR6aqTretALCK4lhblaRjcoC4gdt8oY7Gv35vRy056rKkc1L276p9go_cqmU5vGn3gDdgQoyonl-EtggFPuZMcodnA-jOpb8aOcBAKi-svSpagWFKraS9zl_BcElcfApC6jyyil0cfjFVJFaVcmNJE=s317-c-no"
-                    alt="User Profile" class="profile-img" referrerpolicy="no-referrer">
+                <img id="user-profile-pic" src="https://lh3.googleusercontent.com/a-/ALV-UjX3DikwgxV2TSUG_l1-O33coxmg39dWSqDWiwv2czjhJFLRfag2oWw-nDXTGJ8keIKjNs8ukWRSsKiQsHo983WkmfPiP6cz1cicMI2kTI0C8-2UUpilG-H3AhfaY_rBJYMF4VsEywzbdAZzOnbVKTDvF7A3Pn_8mutnrRLlOU60yBT2WhPjav4DkbKhf6pB7I5XpnJW3GQXg3YiZxV80wUiqDG-SK9ywhwDVJwGQucNkBzoZ3qEA8t6HIS_sCuE_8P4Btx-bE99aMzR-ZtODMv17QoHUY_fVt4n5nc25_s75IdkYY4InOIb00_87vRFnL97ipINEwbl0zgYALljxBajAYUvgOxr0bPIDNDLYJ7KR8x2wGtOm2qV7kQDRoddpFW1hSs1sVK9-ge26n5NWQLYSqs-j9NV6C5AXjaFMhyW6axvwp6ad6M8LDM-R4ayFwlvcLoJMY2sbu3xTKugPGUKQgVLi6uKu_s4m8tIx47rIov10tlZgRs432mJhTdbgLlMbqCRIYUeYpYCEnekRv0hYay_O6CdoJRs0RY_bKNixKAlSx-h7dCrxkZ2W3intsmGbpab9Fa_rpgxTGyJGyXo4JxWOzuOqYX_--_FDG1fKs4AOqENrbuAnWIMbG_BT9cfMY1dnQ_J-Hp5DrHjsRL0T2QSOF_xzsIAAglknGAiR-5DUPvcSjFdG1MHh6XJGJxpLrPaIz15Za3vuWGKLULSLQaagNNqwDqdFsWXLMdfF8Rf3YKpRwGW21l4muQAH_BJ6uEI7R7d6erHDc9U6OhvNZIQ1t9JOduU-i1pq98_H7r-IoJni4rJwMSCamweyigfvNaJ4c-iBGQaPZYnHQ3FT-QTlIsykQTOTiKURVat0awqIXjsQl3aEAvGLmgdr6cgBQXfhjv0qS0p7MiaQRfsYMLGmZD2C4OR6aqTretALCK4lhblaRjcoC4gdt8oY7Gv35vRy056rKkc1L276p9go_cqmU5vGn3gDdgQoyonl-EtggFPuZMcodnA-jOpb8aOcBAKi-svSpagWFKraS9zl_BcElcfApC6jyyil0cfjFVJFaVcmNJE=s317-c-no" alt="User Profile" class="profile-img" referrerpolicy="no-referrer">
                 <span class="footer-tagline">Study smarter, not harder.</span>
             </div>
 
@@ -371,32 +322,24 @@
             </ul>
 
             <div class="footer-socials">
-
                 <a href="#" aria-label="Instagram">
-                    <img src="https://cdn-icons-png.flaticon.com/128/15713/15713420.png" alt="Instagram Logo" width="24"
-                        height="24">
+                    <img src="https://cdn-icons-png.flaticon.com/128/15713/15713420.png" alt="Instagram Logo" width="24" height="24">
                 </a>
-
                 <a href="https://github.com/GRK-WEK" aria-label="GitHub">
-                    <img src="https://cdn-icons-png.flaticon.com/128/11376/11376446.png" alt="GitHub Logo" width="24"
-                        height="24">
+                    <img src="https://cdn-icons-png.flaticon.com/128/11376/11376446.png" alt="GitHub Logo" width="24" height="24">
                 </a>
-                <a href="#" aria-label="Instagram">
-                    <img src="https://cdn-icons-png.flaticon.com/128/3536/3536761.png" alt="REDDIT Logo" width="24"
-                        height="24">
+                <a href="#" aria-label="Reddit">
+                    <img src="https://cdn-icons-png.flaticon.com/128/3536/3536761.png" alt="REDDIT Logo" width="24" height="24">
                 </a>
-                <a href="https://www.quora.com/profile/Garrick-Kogola" aria-label="LinkedIn">
-                    <img src="https://cdn-icons-png.flaticon.com/128/174/174865.png" alt="Quora Logo" width="24"
-                        height="24">
+                <a href="https://www.quora.com/profile/Garrick-Kogola" aria-label="Quora">
+                    <img src="https://cdn-icons-png.flaticon.com/128/174/174865.png" alt="Quora Logo" width="24" height="24">
                 </a>
             </div>
         </div>
         <h3>© 2025 Garrick Kogola</h3>
     </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-    <script src="env.js"></script>
-
     <script src="kidszone.js"></script>
 </body>
 

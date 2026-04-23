@@ -1,6 +1,6 @@
 // 1. Initialize Supabase Client
 const SUPABASE_URL = 'https://miiewkxzsffpaefgdztm.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1paWV3a3h6c2ZmcGFlZmdkenRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcxNjc4ODEsImV4cCI6MjA4Mjc0Mzg4MX0.fLN3Ncmqb_ynCAPQnNr0nKZ_S0olZ4kohu87M6-Luy8';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1paWV3a3h6c2ZmcGFlZmdkenRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcxNjc4ODEsImV4cCI6MjA4Mjc0Mzg4MX0.fLN3Ncmqb_ynCAPQnNr0nKZ_S0olZ4kohu87M6-Luy8 ';
 
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 console.log("Supabase Config Loaded:", !!SUPABASE_URL);
@@ -272,7 +272,7 @@ class StudyDataStore {
             .eq('id', id);
 
         if (error) throw error;
-
+        
         const index = this.data.findIndex(item => item.id === id);
         if (index !== -1) {
             this.data[index] = { ...this.data[index], ...updates };
@@ -794,19 +794,19 @@ class DiaryManager {
         this.renderCalendar();
     }
 
-    prevMonth() {
-        this.currentDate.setMonth(this.currentDate.getMonth() - 1);
-        this.renderCalendar();
+    prevMonth() { 
+        this.currentDate.setMonth(this.currentDate.getMonth() - 1); 
+        this.renderCalendar(); 
     }
-
-    nextMonth() {
-        this.currentDate.setMonth(this.currentDate.getMonth() + 1);
-        this.renderCalendar();
+    
+    nextMonth() { 
+        this.currentDate.setMonth(this.currentDate.getMonth() + 1); 
+        this.renderCalendar(); 
     }
 }
 
 // Make functions available globally
-window.toggleChart = function (chartId) {
+window.toggleChart = function(chartId) {
     document.getElementById('chart-placeholder-text').style.display = 'none';
     document.querySelectorAll('.chart-wrapper').forEach(wrapper => {
         wrapper.style.display = 'none';
@@ -848,7 +848,7 @@ var slideElement = document.getElementById("slideshow");
 function changeImage() {
     if (!slideElement) return;
     slideElement.style.opacity = 0;
-    setTimeout(function () {
+    setTimeout(function() {
         index++;
         if (index >= images.length) { index = 0; }
         slideElement.src = images[index];
